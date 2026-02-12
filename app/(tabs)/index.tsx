@@ -1,98 +1,118 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import MenuBeranda from "@/components/menu-beranda";
+import RamadhanBanner from "@/components/ramadhan-banner";
+import CardPrayer from "@/components/ui/card-prayer";
+import JadwalSholat from "@/components/ui/jadwalSholat";
+import { formatCountdown, useNextPrayer } from "@/hooks/prayer/use-next-prayer";
+import { usePrayerTimes } from "@/hooks/prayer/use-prayer-times";
+import { useCurrentTime } from "@/hooks/use-current-time";
+import { useHijriDate } from "@/hooks/use-hijri-date";
+import { useUserLocation } from "@/hooks/use-user-location";
+import { router } from "expo-router";
+import { Bell, SearchIcon } from "lucide-react-native";
+import React from "react";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import "./../style/global.css";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const IMAGE_HEIGHT = SCREEN_HEIGHT * 0.42; // 42% tinggi layar
 
-export default function HomeScreen() {
+export default function index() {
+  const date = useCurrentTime();
+  const tanggalHijriyah = useHijriDate();
+  const { lokasi, loading, provinceName, kabkota } = useUserLocation();
+  const { jadwal } = usePrayerTimes({ provinceName, kabkota });
+  const nextPrayer = useNextPrayer(jadwal);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
+    <ScrollView
+      className="bg-[#fbf5ea] flex-1"
+      bounces={false}
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="bg-[#fbf5ea] flex-1">
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require("@/assets/images/element.png")}
+          style={{ width: "100%", height: IMAGE_HEIGHT }}
+          className="absolute top-0 rounded-b-3xl"
+          resizeMode="cover"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
+          <SafeAreaView edges={["top"]}>
+            <View className="p-4 flex-row justify-between items-center">
+              <View>
+                <Text className="text-white font-medium text-lg">
+                  {tanggalHijriyah} H
+                </Text>
+                <Text className="text-white/70 font-medium text-sm">
+                  {loading ? "Mencari lokasi..." : lokasi}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => router.push("/screen/notification")}
+              >
+                <Bell color="white" size={24} fill={"#fff"} fillOpacity={0.8} />
+              </TouchableOpacity>
+            </View>
+            <View className="justify-center items-center mt-6 mb-2">
+              <Text className="text-6xl text-white font-medium">
+                {date.toLocaleTimeString("id-ID", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })}
+              </Text>
+              {nextPrayer && (
+                <View className="items-center flex-row gap-2 mt-1">
+                  <Text className="text-white/80 text-sm">
+                    {nextPrayer.name} dalam
+                  </Text>
+                  <Text className="text-white text-sm">
+                    {formatCountdown(
+                      nextPrayer.hours,
+                      nextPrayer.minutes,
+                      nextPrayer.seconds,
+                    )}
+                  </Text>
+                </View>
+              )}
+            </View>
+            <JadwalSholat />
+          </SafeAreaView>
+          <View style={{ marginTop: IMAGE_HEIGHT * 0.1 }} className=" ">
+            <View className="py-3 px-3 mx-4 mt-4 bg-[#f0eee5] rounded-xl border border-[#c2c1c1] flex-row items-center gap-2">
+              <TextInput
+                placeholder="Cari surat, doa, artikel ..."
+                placeholderTextColor={"gray"}
+                className="flex-1 text-sm text-[#336363]"
+              />
+              <SearchIcon color={"gray"} />
+            </View>
+            <MenuBeranda />
+            <RamadhanBanner />
+            <CardPrayer />
+            <View className="mt-4 mb-32">
+              <Text className="px-4 font-light text-xs text-center text-[#336363] mb-6">
+                Semua operasional aplikasi ini di develop dengan individu {"\n"}
+                bukan kelompok atau organisasi masyarakat
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
