@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# Quran Pesat
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Quran Pesat is a modern, open-source Quran application built with React Native and Expo. It provides a beautiful, fast, and user-friendly experience for reading, searching, and bookmarking Quranic verses, as well as accessing Islamic articles, prayer times, and notifications—all in one place.
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+- **Al-Quran**: Read the full Quran with translation, per-ayat audio, and search.
+- **Bookmark Ayat**: Save and manage favorite ayat locally (AsyncStorage).
+- **Article/News**: Browse Islamic articles and news with category filters and lazy loading.
+- **Prayer Times**: View daily prayer times based on your location.
+- **Notifications**: See app notifications and manage notification settings.
+- **Settings**: Clean, grouped settings page with toggles, links, and profile/login.
+- **Modern UI**: Floating tab bar, running-text category filter, and platform-specific polish.
+- **Offline Support**: Bookmarks and Quran data available offline.
+
+## 📱 Screenshots
+
+_Add screenshots here if available_
+
+## 🚀 Getting Started
+
+1. **Install dependencies**
 
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the app
+2. **Start the app**
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Open on your device**
+   - Scan the QR code with [Expo Go](https://expo.dev/go) (Android/iOS)
+   - Or run on an emulator: `npx expo start --android` or `npx expo start --ios`
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🛠️ Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- `app/` — Main app screens and navigation (Expo Router)
+- `components/` — Reusable UI components
+- `hooks/` — Custom React hooks (e.g., bookmarks, prayer times)
+- `data/` — Static data (e.g., menu, provinces)
+- `constants/` — Theme and config constants
+- `style/` — Global styles (Tailwind CSS)
+- `assets/` — Images and icons
 
-## Get a fresh project
+## 🧩 Key Technologies
 
-When you're ready, run:
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [Expo Router](https://expo.github.io/router/docs/)
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)
+- [Tailwind CSS (NativeWind)](https://www.nativewind.dev/)
+- [Lucide React Native Icons](https://lucide.dev/icons/)
 
-```bash
-npm run reset-project
-```
+## ⚙️ Scripts
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- `npm start` — Start Expo development server
+- `npm run android` — Run on Android emulator/device
+- `npm run ios` — Run on iOS simulator/device
+- `npm run web` — Run on web
+- `npm run lint` — Lint code
+- `npm run reset-project` — Reset to a fresh project state
 
-## Learn more
+## 📦 Dependencies
 
-To learn more about developing your project with Expo, look at the following resources:
+See `package.json` for the full list of dependencies.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🙏 Credits
 
-## Join the community
+- Built by [@raple](https://github.com/raple)
+- Quran data from [Kemenag API](https://quran.kemenag.go.id/) and open sources
+- Article/news via RSS2JSON API
 
-Join our community of developers creating universal apps.
+## 📄 License
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+MIT
