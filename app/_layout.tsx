@@ -27,6 +27,18 @@ export default function RootLayout() {
           name="screen/notification"
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="asmaul-husna" options={{ headerShown: false }} />
+        <Stack.Screen name="donasi" options={{ headerShown: false }} />
+        <Stack.Screen name="doa" options={{ headerShown: false }} />
+        <Stack.Screen name="doa/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="hadits" options={{ headerShown: false }} />
+        <Stack.Screen name="hadits/[nomor]" options={{ headerShown: false }} />
+        <Stack.Screen name="hadits-bookmark" options={{ headerShown: false }} />
+        <Stack.Screen name="dzikir" options={{ headerShown: false }} />
+        <Stack.Screen name="dzikir-bookmark" options={{ headerShown: false }} />
+        <Stack.Screen name="voice-arab-guide" options={{ headerShown: false }} />
+        <Stack.Screen name="screen/search-all" options={{ headerShown: false }} />
+        <Stack.Screen name="kiblat" options={{ headerShown: false }} />
         <Stack.Screen
           name="screen/surah/[nomor]"
           options={{ headerShown: false }}

@@ -37,6 +37,49 @@ _Add screenshots here if available_
    - Scan the QR code with [Expo Go](https://expo.dev/go) (Android/iOS)
    - Or run on an emulator: `npx expo start --android` or `npx expo start --ios`
 
+## 💳 Midtrans Support Link Setup
+
+Fitur `Dukung Developer` memakai mode ringan via Midtrans payment link.
+
+1. Buat payment link di dashboard Midtrans.
+2. Set environment variable:
+
+   ```bash
+   EXPO_PUBLIC_MIDTRANS_PAYMENT_LINK=https://your-midtrans-payment-link
+   ```
+
+3. Restart dev server (`npx expo start -c`) agar env terbaru terbaca.
+
+## 🤖 Islamic AI Chat Setup
+
+Fitur `Asisten Islami AI` bisa dihubungkan ke endpoint model AI milik kamu.
+
+Set environment variable berikut:
+
+```bash
+EXPO_PUBLIC_ISLAMIC_AI_API_URL=https://your-ai-endpoint
+EXPO_PUBLIC_ISLAMIC_AI_API_KEY=your-api-key-optional
+```
+
+### Opsi cepat: Together AI (direct)
+
+```bash
+EXPO_PUBLIC_ISLAMIC_AI_PROVIDER=together
+EXPO_PUBLIC_TOGETHER_API_KEY=your-together-key
+EXPO_PUBLIC_TOGETHER_MODEL=meta-llama/Llama-3.3-70B-Instruct-Turbo-Free
+# optional override endpoint:
+# EXPO_PUBLIC_TOGETHER_API_URL=https://api.together.xyz/v1/chat/completions
+```
+
+Payload yang dikirim dari app:
+- `scope`: `"islam-only"`
+- `messages`: array chat (`role`, `content`) dengan system prompt Islami di awal
+
+Format response yang didukung:
+- `{ reply: "..." }`
+- `{ response: "..." }`
+- OpenAI-style `choices[0].message.content`
+
 ## 🛠️ Project Structure
 
 - `app/` — Main app screens and navigation (Expo Router)

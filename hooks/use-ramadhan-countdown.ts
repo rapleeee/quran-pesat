@@ -1,20 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-interface RamadhanCountdownData {
-  daysUntil: number;
-  isRamadhan: boolean;
-  ramadhanDate: string | null;
-  hijriDate: {
-    day: number;
-    month: number;
-    monthName: string;
-    year: number;
-  } | null;
-  loading: boolean;
-  error: string | null;
-}
-
 interface HijriApiResponse {
   code: number;
   data: {
@@ -40,8 +26,146 @@ interface GregorianApiResponse {
   };
 }
 
-const CACHE_KEY = "ramadhan_countdown_cache";
-const RAMADHAN_MONTH = 9; // Bulan ke-9 dalam kalender Hijriyah
+interface IslamicEventConfig {
+  id: string;
+  name: string;
+  hijriDay: number;
+  hijriMonth: number;
+  greetingTitle: string;
+  greetingSubtitle: string;
+  upcomingTitle: string;
+  ongoingByMonth?: boolean;
+  durationDays?: number;
+}
+
+export interface ResolvedIslamicEvent extends IslamicEventConfig {
+  hijriYear: number;
+  gregorianDate: string | null;
+  daysUntil: number;
+  isActive: boolean;
+}
+
+interface IslamicEventCountdownData {
+  activeEvent: ResolvedIslamicEvent | null;
+  upcomingEvent: ResolvedIslamicEvent | null;
+  loading: boolean;
+  error: string | null;
+}
+
+const CACHE_KEY = "islamic_events_countdown_cache_v1";
+
+const ISLAMIC_EVENTS: IslamicEventConfig[] = [
+  {
+    id: "tahun-baru-hijriyah",
+    name: "Tahun Baru Hijriyah",
+    hijriDay: 1,
+    hijriMonth: 1,
+    greetingTitle: "Selamat Tahun Baru Hijriyah!",
+    greetingSubtitle: "Semoga tahun ini penuh keberkahan",
+    upcomingTitle: "Tahun Baru Hijriyah Tiba!",
+  },
+  {
+    id: "asyura",
+    name: "Asyura 10 Muharram",
+    hijriDay: 10,
+    hijriMonth: 1,
+    greetingTitle: "Selamat Menyambut Hari Asyura",
+    greetingSubtitle: "Semoga Allah limpahkan rahmat dan ampunan",
+    upcomingTitle: "Hari Asyura Segera Tiba!",
+  },
+  {
+    id: "maulid-nabi",
+    name: "Maulid Nabi",
+    hijriDay: 12,
+    hijriMonth: 3,
+    greetingTitle: "Selamat Memperingati Maulid Nabi!",
+    greetingSubtitle: "Mari teladani akhlak Rasulullah SAW",
+    upcomingTitle: "Maulid Nabi Segera Tiba!",
+  },
+  {
+    id: "isra-miraj",
+    name: "Isra Mi’raj",
+    hijriDay: 27,
+    hijriMonth: 7,
+    greetingTitle: "Selamat Memperingati Isra Mi’raj",
+    greetingSubtitle: "Semoga menambah keimanan dan ketaatan",
+    upcomingTitle: "Isra Mi’raj Segera Tiba!",
+  },
+  {
+    id: "nisfu-syaban",
+    name: "Nisfu Sya’ban",
+    hijriDay: 15,
+    hijriMonth: 8,
+    greetingTitle: "Malam Nisfu Sya’ban",
+    greetingSubtitle: "Semoga Allah menerima amal ibadah kita",
+    upcomingTitle: "Nisfu Sya’ban Segera Tiba!",
+  },
+  {
+    id: "ramadhan",
+    name: "Ramadhan",
+    hijriDay: 1,
+    hijriMonth: 9,
+    greetingTitle: "Ramadhan Mubarak!",
+    greetingSubtitle: "Selamat menjalankan ibadah puasa",
+    upcomingTitle: "Ramadhan Tiba!",
+    ongoingByMonth: true,
+  },
+  {
+    id: "nuzulul-quran",
+    name: "Nuzulul Qur’an",
+    hijriDay: 17,
+    hijriMonth: 9,
+    greetingTitle: "Selamat Memperingati Nuzulul Qur’an",
+    greetingSubtitle: "Mari perbanyak tilawah dan tadabbur Al-Qur’an",
+    upcomingTitle: "Nuzulul Qur’an Segera Tiba!",
+  },
+  {
+    id: "idul-fitri",
+    name: "Idul Fitri",
+    hijriDay: 1,
+    hijriMonth: 10,
+    greetingTitle: "Eid Mubarak!",
+    greetingSubtitle: "Selamat Hari Raya Idul Fitri",
+    upcomingTitle: "Idul Fitri Tiba!",
+  },
+  {
+    id: "idul-adha",
+    name: "Idul Adha",
+    hijriDay: 10,
+    hijriMonth: 12,
+    greetingTitle: "Eid Adha Mubarak!",
+    greetingSubtitle: "Selamat Hari Raya Idul Adha",
+    upcomingTitle: "Idul Adha Tiba!",
+  },
+  {
+    id: "tarwiyah",
+    name: "Tarwiyah 8 Dzulhijjah",
+    hijriDay: 8,
+    hijriMonth: 12,
+    greetingTitle: "Hari Tarwiyah",
+    greetingSubtitle: "Semoga Allah menerima amal ibadah kita",
+    upcomingTitle: "Tarwiyah Segera Tiba!",
+  },
+  {
+    id: "arafah",
+    name: "Arafah 9 Dzulhijjah",
+    hijriDay: 9,
+    hijriMonth: 12,
+    greetingTitle: "Hari Arafah",
+    greetingSubtitle: "Semoga Allah limpahkan ampunan untuk kita",
+    upcomingTitle: "Arafah Segera Tiba!",
+  },
+  {
+    id: "hari-tasyrik",
+    name: "Hari Tasyrik",
+    hijriDay: 11,
+    hijriMonth: 12,
+    durationDays: 3,
+    greetingTitle: "Hari Tasyrik",
+    greetingSubtitle: "Perbanyak dzikir dan syukur kepada Allah",
+    upcomingTitle: "Hari Tasyrik Segera Tiba!",
+  },
+];
 
 async function getHijriDate(date: Date): Promise<HijriApiResponse> {
   const day = date.getDate().toString().padStart(2, "0");
@@ -79,12 +203,34 @@ function calculateDaysDifference(targetDate: Date, fromDate: Date): number {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
-export function useRamadhanCountdown(): RamadhanCountdownData {
-  const [data, setData] = useState<RamadhanCountdownData>({
-    daysUntil: 0,
-    isRamadhan: false,
-    ramadhanDate: null,
-    hijriDate: null,
+function isPastHijriDate(
+  eventMonth: number,
+  eventDay: number,
+  currentMonth: number,
+  currentDay: number,
+): boolean {
+  if (eventMonth < currentMonth) {
+    return true;
+  }
+  if (eventMonth === currentMonth && eventDay < currentDay) {
+    return true;
+  }
+  return false;
+}
+
+function isDayInEventRange(
+  currentDay: number,
+  eventStartDay: number,
+  durationDays: number,
+): boolean {
+  const eventEndDay = eventStartDay + durationDays - 1;
+  return currentDay >= eventStartDay && currentDay <= eventEndDay;
+}
+
+export function useIslamicEventCountdown(): IslamicEventCountdownData {
+  const [data, setData] = useState<IslamicEventCountdownData>({
+    activeEvent: null,
+    upcomingEvent: null,
     loading: true,
     error: null,
   });
@@ -115,68 +261,83 @@ export function useRamadhanCountdown(): RamadhanCountdownData {
         }
 
         const hijriData = hijriResponse.data.hijri;
+        const currentHijriDay = parseInt(hijriData.day);
         const currentHijriMonth = hijriData.month.number;
         const currentHijriYear = parseInt(hijriData.year);
 
-        const hijriDate = {
-          day: parseInt(hijriData.day),
-          month: currentHijriMonth,
-          monthName: hijriData.month.en,
-          year: currentHijriYear,
-        };
+        const resolvedEvents = await Promise.all(
+          ISLAMIC_EVENTS.map(async (event) => {
+            const durationDays = event.durationDays ?? 1;
+            const isActive = event.ongoingByMonth
+              ? currentHijriMonth === event.hijriMonth
+              : currentHijriMonth === event.hijriMonth &&
+                isDayInEventRange(
+                  currentHijriDay,
+                  event.hijriDay,
+                  durationDays,
+                );
 
-        // Cek apakah sekarang bulan Ramadhan
-        if (currentHijriMonth === RAMADHAN_MONTH) {
-          const result: RamadhanCountdownData = {
-            daysUntil: 0,
-            isRamadhan: true,
-            ramadhanDate: null,
-            hijriDate,
-            loading: false,
-            error: null,
-          };
+            if (isActive) {
+              return {
+                ...event,
+                hijriYear: currentHijriYear,
+                gregorianDate: null,
+                daysUntil: 0,
+                isActive: true,
+              } satisfies ResolvedIslamicEvent;
+            }
 
-          await AsyncStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify({ calculatedAt: todayStr, data: result }),
-          );
+            let targetHijriYear = currentHijriYear;
+            if (
+              isPastHijriDate(
+                event.hijriMonth,
+                event.hijriDay,
+                currentHijriMonth,
+                currentHijriDay,
+              )
+            ) {
+              targetHijriYear += 1;
+            }
 
-          setData(result);
-          return;
-        }
+            const gregorianResponse = await getGregorianDate(
+              event.hijriDay,
+              event.hijriMonth,
+              targetHijriYear,
+            );
 
-        // Tentukan tahun Ramadhan berikutnya
-        let ramadhanYear = currentHijriYear;
-        if (currentHijriMonth > RAMADHAN_MONTH) {
-          ramadhanYear = currentHijriYear + 1;
-        }
+            if (gregorianResponse.code !== 200) {
+              throw new Error(`Gagal mengambil tanggal ${event.name}`);
+            }
 
-        // Fetch tanggal 1 Ramadhan dalam Masehi
-        const ramadhanResponse = await getGregorianDate(
-          1,
-          RAMADHAN_MONTH,
-          ramadhanYear,
+            const gregorianDateStr = gregorianResponse.data.gregorian.date;
+            const [day, month, year] = gregorianDateStr.split("-").map(Number);
+            const gregorianDate = new Date(year, month - 1, day);
+            const daysUntil = Math.max(0, calculateDaysDifference(gregorianDate, today));
+
+            return {
+              ...event,
+              hijriYear: targetHijriYear,
+              gregorianDate: gregorianDate.toISOString(),
+              daysUntil,
+              isActive: false,
+            } satisfies ResolvedIslamicEvent;
+          }),
         );
-        if (ramadhanResponse.code !== 200) {
-          throw new Error("Gagal mengambil tanggal Ramadhan");
-        }
 
-        const ramadhanDateStr = ramadhanResponse.data.gregorian.date;
-        const [day, month, year] = ramadhanDateStr.split("-").map(Number);
-        const ramadhanDate = new Date(year, month - 1, day);
+        const activeEvent =
+          resolvedEvents.find((item) => item.isActive) || null;
 
-        const daysUntil = calculateDaysDifference(ramadhanDate, today);
+        const upcomingEvent = [...resolvedEvents]
+          .filter((item) => !item.isActive)
+          .sort((a, b) => a.daysUntil - b.daysUntil)[0] || null;
 
-        const result: RamadhanCountdownData = {
-          daysUntil: Math.max(0, daysUntil),
-          isRamadhan: false,
-          ramadhanDate: ramadhanDate.toISOString(),
-          hijriDate,
+        const result: IslamicEventCountdownData = {
+          activeEvent,
+          upcomingEvent,
           loading: false,
           error: null,
         };
 
-        // Simpan ke cache
         await AsyncStorage.setItem(
           CACHE_KEY,
           JSON.stringify({ calculatedAt: todayStr, data: result }),
@@ -184,15 +345,16 @@ export function useRamadhanCountdown(): RamadhanCountdownData {
 
         setData(result);
       } catch (error) {
-        setData((prev) => ({
-          ...prev,
+        setData({
+          activeEvent: null,
+          upcomingEvent: null,
           loading: false,
           error: error instanceof Error ? error.message : "Terjadi kesalahan",
-        }));
+        });
       }
     }
 
-    calculate();
+    void calculate();
   }, []);
 
   return data;

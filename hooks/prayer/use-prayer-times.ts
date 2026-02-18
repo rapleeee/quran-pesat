@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export interface JadwalSholat {
   imsak: string;
@@ -32,7 +32,7 @@ interface PrayerTimesResult {
   kabkota: string;
   loading: boolean;
   error: string | null;
-  refetch: () => void;
+  refetch: () => Promise<void>;
 }
 
 const CACHE_KEY_PREFIX = "jadwal_sholat_v2_";
@@ -61,7 +61,7 @@ export function usePrayerTimes({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchJadwal = async () => {
+  const fetchJadwal = useCallback(async () => {
     if (!provinceName || !kabkota) {
       setLoading(false);
       return;
@@ -166,11 +166,11 @@ export function usePrayerTimes({
     } finally {
       setLoading(false);
     }
-  };
+  }, [provinceName, kabkota]);
 
   useEffect(() => {
-    fetchJadwal();
-  }, [provinceName, kabkota]);
+    void fetchJadwal();
+  }, [fetchJadwal]);
 
   return {
     jadwal,
@@ -205,7 +205,7 @@ async function cleanOldCache(): Promise<void> {
         await AsyncStorage.removeItem(key);
       }
     }
-  } catch (e) {
+  } catch {
     // Ignore cleanup errors
   }
 }

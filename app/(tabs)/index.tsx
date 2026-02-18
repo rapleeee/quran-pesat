@@ -1,18 +1,19 @@
 import MenuBeranda from "@/components/menu-beranda";
 import RamadhanBanner from "@/components/ramadhan-banner";
 import CardPrayer from "@/components/ui/card-prayer";
+import HomeLiveClock from "@/components/ui/home-live-clock";
 import JadwalSholat from "@/components/ui/jadwalSholat";
-import { formatCountdown, useNextPrayer } from "@/hooks/prayer/use-next-prayer";
 import { usePrayerTimes } from "@/hooks/prayer/use-prayer-times";
-import { useCurrentTime } from "@/hooks/use-current-time";
 import { useHijriDate } from "@/hooks/use-hijri-date";
 import { useUserLocation } from "@/hooks/use-user-location";
 import { router } from "expo-router";
 import { Bell, SearchIcon } from "lucide-react-native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import {
   Dimensions,
   Image,
+  Platform,
+  RefreshControl,
   ScrollView,
   Text,
   TextInput,
@@ -23,20 +24,75 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import "./../style/global.css";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-const IMAGE_HEIGHT = SCREEN_HEIGHT * 0.42; // 42% tinggi layar
+const IMAGE_HEIGHT = SCREEN_HEIGHT * 0.42;
 
-export default function index() {
-  const date = useCurrentTime();
+function LocationSkeleton() {
+  return (
+    <View className="mt-1">
+      <View className="h-3 w-28 bg-white/40 rounded" />
+      <View className="h-3 w-44 bg-white/30 rounded mt-1" />
+    </View>
+  );
+}
+
+export default function Index() {
+  const [refreshing, setRefreshing] = useState(false);
+  const [bannerVersion, setBannerVersion] = useState(0);
+
   const tanggalHijriyah = useHijriDate();
-  const { lokasi, loading, provinceName, kabkota } = useUserLocation();
-  const { jadwal } = usePrayerTimes({ provinceName, kabkota });
-  const nextPrayer = useNextPrayer(jadwal);
+  const {
+    lokasi,
+    loading: loadingLocation,
+    provinceName,
+    kabkota,
+    refetch: refetchLocation,
+  } = useUserLocation();
+  const {
+    jadwal,
+    loading: loadingPrayer,
+    error: prayerError,
+    refetch: refetchPrayer,
+  } = usePrayerTimes({
+    provinceName,
+    kabkota,
+  });
+
+  const openSearch = () => {
+    router.push("/screen/search-all");
+  };
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    const refreshStartedAt = Date.now();
+    try {
+      await Promise.all([refetchLocation(), refetchPrayer()]);
+      setBannerVersion((prev) => prev + 1);
+    } finally {
+      const elapsed = Date.now() - refreshStartedAt;
+      if (elapsed < 450) {
+        await new Promise((resolve) => setTimeout(resolve, 450 - elapsed));
+      }
+      setRefreshing(false);
+    }
+  }, [refetchLocation, refetchPrayer]);
 
   return (
     <ScrollView
       className="bg-[#fbf5ea] flex-1"
-      bounces={false}
+      bounces
+      alwaysBounceVertical
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => void handleRefresh()}
+          tintColor="#728d8d"
+          colors={["#728d8d"]}
+          progressBackgroundColor="#fbf5ea"
+          progressViewOffset={Platform.OS === "android" ? 12 : 0}
+        />
+      }
+      contentContainerStyle={{ paddingBottom: 120 }}
     >
       <View className="bg-[#fbf5ea] flex-1">
         <Image
@@ -46,72 +102,66 @@ export default function index() {
           resizeMode="cover"
         />
 
-        <ScrollView
-          className="flex-1"
-          showsVerticalScrollIndicator={false}
-          bounces={false}
-        >
-          <SafeAreaView edges={["top"]}>
-            <View className="p-4 flex-row justify-between items-center">
-              <View>
-                <Text className="text-white font-medium text-lg">
-                  {tanggalHijriyah} H
-                </Text>
-                <Text className="text-white/70 font-medium text-sm">
-                  {loading ? "Mencari lokasi..." : lokasi}
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => router.push("/screen/notification")}
-              >
-                <Bell color="white" size={24} fill={"#fff"} fillOpacity={0.8} />
-              </TouchableOpacity>
-            </View>
-            <View className="justify-center items-center mt-6 mb-2">
-              <Text className="text-6xl text-white font-medium">
-                {date.toLocaleTimeString("id-ID", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                })}
+        <SafeAreaView edges={["top"]}>
+          <View className="p-4 flex-row justify-between items-center">
+            <View>
+              <Text className="text-white font-medium text-lg">
+                {tanggalHijriyah} H
               </Text>
-              {nextPrayer && (
-                <View className="items-center flex-row gap-2 mt-1">
-                  <Text className="text-white/80 text-sm">
-                    {nextPrayer.name} dalam
-                  </Text>
-                  <Text className="text-white text-sm">
-                    {formatCountdown(
-                      nextPrayer.hours,
-                      nextPrayer.minutes,
-                      nextPrayer.seconds,
-                    )}
-                  </Text>
-                </View>
+              {loadingLocation ? (
+                <LocationSkeleton />
+              ) : (
+                <Text className="text-white/70 font-medium text-sm">
+                  {lokasi}
+                </Text>
               )}
             </View>
-            <JadwalSholat />
-          </SafeAreaView>
-          <View style={{ marginTop: IMAGE_HEIGHT * 0.1 }} className=" ">
-            <View className="py-3 px-3 mx-4 mt-4 bg-[#f0eee5] rounded-xl border border-[#c2c1c1] flex-row items-center gap-2">
-              <TextInput
-                placeholder="Cari surat, doa, artikel ..."
-                placeholderTextColor={"gray"}
-                className="flex-1 text-sm text-[#336363]"
-              />
-              <SearchIcon color={"gray"} />
-            </View>
-            <MenuBeranda />
-            <RamadhanBanner />
-            <CardPrayer />
-            <View className="mt-4 mb-32">
-              <Text className="px-4 font-light text-xs text-center text-[#336363] mb-6">
-                Semua operasional aplikasi ini di develop dengan individu {"\n"}
-                bukan kelompok atau organisasi masyarakat
-              </Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => router.push("/screen/notification")}
+            >
+              <Bell color="white" size={24} fill={"#fff"} fillOpacity={0.8} />
+            </TouchableOpacity>
           </View>
-        </ScrollView>
+
+          <HomeLiveClock
+            jadwal={jadwal}
+            loading={loadingPrayer}
+            error={prayerError}
+          />
+
+          <JadwalSholat
+            jadwal={jadwal}
+            loading={loadingPrayer}
+            error={prayerError}
+          />
+        </SafeAreaView>
+
+        <View style={{ marginTop: IMAGE_HEIGHT * 0.1 }}>
+          <TouchableOpacity
+            onPress={openSearch}
+            activeOpacity={0.8}
+            className="py-3 px-3 mx-4 mt-6 bg-[#f0eee5] rounded-xl border border-[#c2c1c1] flex-row items-center gap-2"
+          >
+            <TextInput
+              placeholder="Cari surat, doa, artikel, hadits ..."
+              placeholderTextColor={"gray"}
+              className="flex-1 text-sm text-[#336363]"
+              editable={false}
+              pointerEvents="none"
+            />
+            <SearchIcon color={"gray"} />
+          </TouchableOpacity>
+
+          <MenuBeranda />
+          <RamadhanBanner key={bannerVersion} />
+          <CardPrayer />
+          <View className="mt-8 mb-24">
+            <Text className="px-4 font-light text-xs text-center text-[#336363] mb-6">
+              Semua operasional aplikasi ini di develop dengan individu {"\n"}
+              bukan kelompok atau organisasi masyarakat
+            </Text>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );

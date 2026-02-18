@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import {
   Bell,
   BookOpen,
+  Coins,
   ChevronRight,
   CircleHelp,
   Heart,
@@ -157,6 +158,12 @@ export default function Settings() {
     {
       title: "Dukungan",
       items: [
+        {
+          icon: Coins,
+          title: "Dukung Developer",
+          subtitle: "Kontribusi untuk biaya maintenance & fitur baru",
+          onPress: () => router.push("/donasi"),
+        },
         {
           icon: Star,
           title: "Beri Rating",

@@ -87,8 +87,8 @@ function PrayerCard({ item }: { item: PrayerItem }) {
 
 export default function CardPrayer() {
   return (
-    <View className="mb-4 mt-12">
-      <View className="px-4 flex-row justify-between items-center mb-3">
+    <View className="mt-6 mb-4">
+      <View className="px-4 flex-row justify-between items-center mb-4">
         <Text className="font-bold text-lg text-[#363636]">
           Aminkan doa saudaramu
         </Text>

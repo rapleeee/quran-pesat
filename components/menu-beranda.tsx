@@ -5,7 +5,7 @@ import React from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const ITEM_SIZE = (SCREEN_WIDTH - 48) / 4; // 4 kolom dengan padding 24 kiri-kanan
+const ITEM_SIZE = (SCREEN_WIDTH - 48) / 4;
 
 export default function MenuBeranda() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function MenuBeranda() {
   };
 
   return (
-    <View className="px-4 pt-6 pb-8">
+    <View className="px-4 mt-6">
       <View className="flex-row flex-wrap justify-between">
         {menuItems.map((item) => {
           const Icon = item.icon;
@@ -28,7 +28,7 @@ export default function MenuBeranda() {
               key={item.id}
               onPress={() => handlePress(item)}
               style={{ width: ITEM_SIZE }}
-              className="items-center mb-5"
+              className="items-center mb-6"
             >
               <View
                 className="p-3 rounded-full mb-2"
