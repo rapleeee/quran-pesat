@@ -15,20 +15,20 @@ export function SupportMethodCard({
   onOpenLink,
 }: SupportMethodCardProps) {
   return (
-    <View className="mx-4 mb-3 rounded-2xl bg-white border border-[#e5e5e5] p-4">
+    <View className="mx-4 mb-3 rounded-2xl bg-white dark:bg-[#111827] border border-[#e5e5e5] dark:border-[#1f2937] p-4">
       <View className="flex-row items-start justify-between gap-3">
         <View className="flex-1">
-          <Text className="text-[#1f2937] font-semibold text-base">
+          <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-semibold text-base">
             {method.title}
           </Text>
-          <Text className="text-[#4b5563] text-xs mt-1">{method.subtitle}</Text>
+          <Text className="text-[#4b5563] dark:text-[#cbd5e1] text-xs mt-1">{method.subtitle}</Text>
           {method.accountName ? (
             <Text className="text-[#64748b] text-xs mt-2">
               a.n. {method.accountName}
             </Text>
           ) : null}
           {method.copyValue ? (
-            <Text className="text-[#1f2937] text-sm font-semibold mt-1">
+            <Text className="text-[#1f2937] dark:text-[#e5e7eb] text-sm font-semibold mt-1">
               {method.copyValue}
             </Text>
           ) : null}
@@ -41,10 +41,10 @@ export function SupportMethodCard({
           <TouchableOpacity
             onPress={() => onCopy(method)}
             activeOpacity={0.8}
-            className="flex-1 min-h-[44px] rounded-xl border border-[#d1d5db] flex-row items-center justify-center gap-2"
+            className="flex-1 min-h-[44px] rounded-xl border border-[#d1d5db] dark:border-[#374151] flex-row items-center justify-center gap-2"
           >
             <Copy size={16} color="#1f2937" />
-            <Text className="text-[#1f2937] font-medium text-sm">Copy</Text>
+            <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-medium text-sm">Copy</Text>
           </TouchableOpacity>
         ) : null}
 
@@ -63,7 +63,7 @@ export function SupportMethodCard({
             />
             <Text
               className={`font-medium text-sm ${
-                method.isConfigured ? "text-white" : "text-[#6b7280]"
+                method.isConfigured ? "text-white" : "text-[#6b7280] dark:text-[#94a3b8]"
               }`}
             >
               {method.isConfigured ? method.actionLabel : "Belum Aktif"}

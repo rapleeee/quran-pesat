@@ -8,7 +8,14 @@ import { useQiblaDirectionLabel } from "@/hooks/qibla/use-qibla-direction-label"
 import { useUserLocation } from "@/hooks/use-user-location";
 import { router } from "expo-router";
 import React from "react";
-import { Alert, ImageBackground, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function KiblatMenuScreen() {
@@ -81,7 +88,17 @@ export default function KiblatMenuScreen() {
               />
             </View>
 
-            <Text className="text-center text-xs text-gray-600 pb-3">
+            <TouchableOpacity
+              onPress={() => router.push("/screen/qibla-camera")}
+              className="bg-[#728d8d] rounded-xl py-3 px-4 items-center mb-3"
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-semibold">
+                Tentukan Kiblat Pakai Kamera
+              </Text>
+            </TouchableOpacity>
+
+            <Text className="text-center text-xs text-gray-600 dark:text-[#cbd5e1] pb-3">
               Jauhkan ponsel dari benda logam agar kompas stabil.
             </Text>
           </View>

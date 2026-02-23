@@ -86,7 +86,7 @@ function NotificationCard({ item }: { item: NotificationItem }) {
   return (
     <View
       className={`mx-4 mb-3 p-4 rounded-xl ${
-        item.read ? "bg-white" : "bg-[#728d8d]/10"
+        item.read ? "bg-white dark:bg-[#111827]" : "bg-[#728d8d]/10"
       }`}
     >
       <View className="flex-row items-start">
@@ -96,15 +96,15 @@ function NotificationCard({ item }: { item: NotificationItem }) {
         <View className="flex-1">
           <View className="flex-row items-center justify-between mb-1">
             <Text
-              className={`font-semibold text-[#363636] ${
+              className={`font-semibold text-[#363636] dark:text-[#f8fafc] ${
                 !item.read ? "font-bold" : ""
               }`}
             >
               {item.title}
             </Text>
-            <Text className="text-xs text-gray-400">{item.time}</Text>
+            <Text className="text-xs text-gray-400 dark:text-[#94a3b8]">{item.time}</Text>
           </View>
-          <Text className="text-sm text-gray-600 leading-5">
+          <Text className="text-sm text-gray-600 dark:text-[#cbd5e1] leading-5">
             {item.message}
           </Text>
         </View>
@@ -122,13 +122,13 @@ export default function Notification() {
   const [reminderNotif, setReminderNotif] = useState(false);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
       {/* Header */}
-      <View className="flex-row items-center px-4 py-3 border-b border-[#e5e5e5]">
+      <View className="flex-row items-center px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937]">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <ArrowLeft size={24} color="#363636" />
+          <ArrowLeft size={24} color="#728d8d" />
         </TouchableOpacity>
-        <Text className="font-bold text-xl text-[#363636]">Notifikasi</Text>
+        <Text className="font-bold text-xl text-[#363636] dark:text-[#f8fafc]">Notifikasi</Text>
       </View>
 
       <FlatList
@@ -137,15 +137,15 @@ export default function Notification() {
         ListHeaderComponent={
           <View className="px-4 py-4">
             {/* Notification Settings */}
-            <View className="bg-white rounded-xl p-4 mb-4">
-              <Text className="font-semibold text-[#363636] mb-3">
+            <View className="bg-white dark:bg-[#111827] rounded-xl p-4 mb-4">
+              <Text className="font-semibold text-[#363636] dark:text-[#f8fafc] mb-3">
                 Pengaturan Notifikasi
               </Text>
 
               <View className="flex-row items-center justify-between py-2">
                 <View className="flex-row items-center">
                   <Bell size={18} color="#728d8d" />
-                  <Text className="text-[#363636] ml-2">Waktu Sholat</Text>
+                  <Text className="text-[#363636] dark:text-[#f8fafc] ml-2">Waktu Sholat</Text>
                 </View>
                 <Switch
                   value={prayerNotif}
@@ -158,7 +158,7 @@ export default function Notification() {
               <View className="flex-row items-center justify-between py-2">
                 <View className="flex-row items-center">
                   <BookOpen size={18} color="#728d8d" />
-                  <Text className="text-[#363636] ml-2">Ayat Harian</Text>
+                  <Text className="text-[#363636] dark:text-[#f8fafc] ml-2">Ayat Harian</Text>
                 </View>
                 <Switch
                   value={verseNotif}
@@ -171,7 +171,7 @@ export default function Notification() {
               <View className="flex-row items-center justify-between py-2">
                 <View className="flex-row items-center">
                   <Clock size={18} color="#728d8d" />
-                  <Text className="text-[#363636] ml-2">Pengingat Tadarus</Text>
+                  <Text className="text-[#363636] dark:text-[#f8fafc] ml-2">Pengingat Tadarus</Text>
                 </View>
                 <Switch
                   value={reminderNotif}
@@ -183,7 +183,7 @@ export default function Notification() {
             </View>
 
             {/* Recent section header */}
-            <Text className="font-semibold text-[#363636] mb-3">
+            <Text className="font-semibold text-[#363636] dark:text-[#f8fafc] mb-3">
               Notifikasi Terbaru
             </Text>
           </View>
@@ -194,7 +194,7 @@ export default function Notification() {
         ListEmptyComponent={
           <View className="items-center justify-center py-10 px-4">
             <BellOff size={64} color="#9ca3af" />
-            <Text className="text-gray-500 mt-4 text-center">
+            <Text className="text-gray-500 dark:text-[#cbd5e1] mt-4 text-center">
               Belum ada notifikasi
             </Text>
           </View>

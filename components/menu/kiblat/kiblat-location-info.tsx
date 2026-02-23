@@ -18,13 +18,13 @@ export function KiblatLocationInfo({
   return (
     <View className="items-center px-4 mt-12">
       <View className="flex-row items-center">
-        <MapPin size={18} color="#363636" />
-        <Text className="ml-1 text-[#363636] font-bold text-xl">
+        <MapPin size={18} color="#728d8d" />
+        <Text className="ml-1 text-[#363636] dark:text-[#f8fafc] font-bold text-xl">
           {locationLabel || "Lokasi belum tersedia"}
         </Text>
       </View>
 
-      <Text className="mt-3 text-center text-[#363636] font-semibold text-base">
+      <Text className="mt-3 text-center text-[#363636] dark:text-[#f8fafc] font-semibold text-base">
         {loading ? "Memperbarui arah kiblat..." : directionLabel}
       </Text>
 

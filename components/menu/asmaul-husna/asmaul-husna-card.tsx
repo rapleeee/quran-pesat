@@ -85,7 +85,7 @@ export function AsmaulHusnaCard({
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={() => onPress(item)}
-      className="flex-1 bg-white rounded-xl border border-[#e5e5e5] p-3"
+      className="flex-1 bg-white dark:bg-[#111827] rounded-xl border border-[#e5e5e5] dark:border-[#1f2937] p-3"
       style={{ minHeight: 44 }}
     >
       <Text className="text-[10px] text-[#647b7b] font-semibold">{orderLabel}</Text>
@@ -93,24 +93,24 @@ export function AsmaulHusnaCard({
       <HighlightText
         text={item.arabic}
         query={query}
-        className="text-right text-2xl text-[#1f2937] mt-2"
-        highlightClassName="bg-[#f6c76d]/35 text-[#1f2937]"
+        className="text-right text-2xl text-[#1f2937] dark:text-[#e5e7eb] mt-2 font-arabic"
+        highlightClassName="bg-[#f6c76d]/35 text-[#1f2937] dark:text-[#e5e7eb]"
         writingDirection="rtl"
       />
 
       <HighlightText
         text={item.latin}
         query={query}
-        className="text-[#1f2937] font-semibold text-xs mt-2"
-        highlightClassName="bg-[#f6c76d]/35 text-[#1f2937]"
+        className="text-[#1f2937] dark:text-[#e5e7eb] font-semibold text-xs mt-2"
+        highlightClassName="bg-[#f6c76d]/35 text-[#1f2937] dark:text-[#e5e7eb]"
         numberOfLines={1}
       />
 
       <HighlightText
         text={item.meaning}
         query={query}
-        className="text-[#4b5563] text-[11px] mt-1 leading-4"
-        highlightClassName="bg-[#f6c76d]/35 text-[#374151]"
+        className="text-[#4b5563] dark:text-[#cbd5e1] text-[11px] mt-1 leading-4"
+        highlightClassName="bg-[#f6c76d]/35 text-[#374151] dark:text-[#e5e7eb]"
         numberOfLines={2}
       />
     </TouchableOpacity>

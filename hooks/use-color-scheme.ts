@@ -1,1 +1,6 @@
-export { useColorScheme } from 'react-native';
+import { useThemePreference } from "@/hooks/use-theme-preference";
+
+export function useColorScheme() {
+  const { isDark } = useThemePreference();
+  return isDark ? "dark" : "light";
+}

@@ -17,8 +17,8 @@ const JadwalSholat = ({ jadwal, loading, error }: JadwalSholatProps) => {
           {["Subuh", "Dzuhur", "Ashar", "Maghrib", "Isya"].map((name) => (
             <View key={name} className="flex py-2 items-center gap-1">
               <Text className="text-white/90">{name}</Text>
-              <View className="h-4 w-4 bg-white/50 rounded-full" />
-              <View className="h-4 w-10 bg-white/50 rounded" />
+              <View className="h-4 w-4 bg-white dark:bg-[#111827]/50 rounded-full" />
+              <View className="h-4 w-10 bg-white dark:bg-[#111827]/50 rounded" />
             </View>
           ))}
         </View>

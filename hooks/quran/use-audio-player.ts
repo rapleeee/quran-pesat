@@ -1,4 +1,8 @@
-import { Audio } from "expo-av";
+import {
+  setAudioModeAsync,
+  useAudioPlayer as useExpoAudioPlayer,
+  useAudioPlayerStatus,
+} from "expo-audio";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // Jumlah ayat per surah untuk menghitung ayat global
@@ -11,6 +15,24 @@ const AYAT_PER_SURAH = [
   11, 8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6,
 ];
 
+const logDev = (...args: unknown[]) => {
+  if (__DEV__) {
+    console.log(...args);
+  }
+};
+
+const warnDev = (...args: unknown[]) => {
+  if (__DEV__) {
+    console.warn(...args);
+  }
+};
+
+const errorDev = (...args: unknown[]) => {
+  if (__DEV__) {
+    console.error(...args);
+  }
+};
+
 // Menghitung nomor ayat global berdasarkan surah dan ayat
 function getGlobalAyatNumber(surah: number, ayat: number): number {
   let globalNumber = 0;
@@ -21,7 +43,9 @@ function getGlobalAyatNumber(surah: number, ayat: number): number {
 }
 
 export function useAudioPlayer() {
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const player = useExpoAudioPlayer(null);
+  const status = useAudioPlayerStatus(player);
+  const pendingPlaybackRef = useRef<"ayat" | "surah" | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAyatId, setCurrentAyatId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,143 +62,198 @@ export function useAudioPlayer() {
     return `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalAyat}.mp3`;
   };
 
+  const stopAndReset = useCallback(async () => {
+    player.pause();
+    if (status.isLoaded) {
+      try {
+        await player.seekTo(0);
+      } catch (error) {
+        warnDev("Failed to reset audio position:", error);
+      }
+    }
+  }, [player, status.isLoaded]);
+
+  const markPendingPlayback = useCallback((type: "ayat" | "surah") => {
+    pendingPlaybackRef.current = type;
+    if (type === "ayat") {
+      setIsLoading(true);
+      setFullSurahLoading(false);
+    } else {
+      setFullSurahLoading(true);
+      setIsLoading(false);
+    }
+  }, []);
+
   const playAyat = useCallback(
     async (surah: number, ayat: number, ayatId: number) => {
       try {
-        // Configure audio mode for iOS
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          playsInSilentModeIOS: true,
-          staysActiveInBackground: false,
-          shouldDuckAndroid: true,
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          shouldPlayInBackground: false,
+          interruptionMode: "duckOthers",
         });
-
-        // Stop currently playing audio
-        if (soundRef.current) {
-          await soundRef.current.stopAsync();
-          await soundRef.current.unloadAsync();
-          soundRef.current = null;
-        }
 
         // If same ayat was playing, just stop it
         if (currentAyatId === ayatId && isPlaying) {
+          await stopAndReset();
+          pendingPlaybackRef.current = null;
           setIsPlaying(false);
+          setIsLoading(false);
           setCurrentAyatId(null);
           return;
         }
 
-        setIsLoading(true);
+        if (status.playing) {
+          await stopAndReset();
+        }
+
         setCurrentAyatId(ayatId);
+        setCurrentSurahPlaying(null);
+        setIsPlayingFullSurah(false);
+        setIsPlaying(false);
+        markPendingPlayback("ayat");
 
         const audioUrl = getAudioUrl(surah, ayat);
-        console.log("Playing audio from:", audioUrl);
+        logDev("Playing audio from:", audioUrl);
 
-        const { sound } = await Audio.Sound.createAsync(
-          { uri: audioUrl },
-          { shouldPlay: true },
-        );
-
-        soundRef.current = sound;
-        setIsPlaying(true);
-        setIsLoading(false);
-
-        // Listen for playback status
-        sound.setOnPlaybackStatusUpdate((status) => {
-          if (status.isLoaded && status.didJustFinish) {
-            setIsPlaying(false);
-            setCurrentAyatId(null);
-          }
-        });
+        player.replace(audioUrl);
+        void player.seekTo(0);
+        player.play();
       } catch (error) {
-        console.error("Error playing audio:", error);
-        console.error("Audio URL was:", getAudioUrl(surah, ayat));
+        errorDev("Error playing audio:", error);
+        errorDev("Audio URL was:", getAudioUrl(surah, ayat));
+        pendingPlaybackRef.current = null;
         setIsPlaying(false);
         setIsLoading(false);
         setCurrentAyatId(null);
       }
     },
-    [currentAyatId, isPlaying],
+    [
+      currentAyatId,
+      isPlaying,
+      markPendingPlayback,
+      player,
+      status.playing,
+      stopAndReset,
+    ],
   );
 
   const stopAudio = useCallback(async () => {
-    if (soundRef.current) {
-      await soundRef.current.stopAsync();
-      await soundRef.current.unloadAsync();
-      soundRef.current = null;
-    }
+    await stopAndReset();
+    pendingPlaybackRef.current = null;
     setIsPlaying(false);
     setCurrentAyatId(null);
     setIsPlayingFullSurah(false);
     setCurrentSurahPlaying(null);
-  }, []);
+    setIsLoading(false);
+    setFullSurahLoading(false);
+  }, [stopAndReset]);
 
   // Play full surah audio from santrikoding API
   const playFullSurah = useCallback(
     async (surahNomor: number, audioUrl: string) => {
       try {
-        // Configure audio mode for iOS
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          playsInSilentModeIOS: true,
-          staysActiveInBackground: true,
-          shouldDuckAndroid: true,
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          shouldPlayInBackground: false,
+          interruptionMode: "duckOthers",
         });
-
-        // Stop currently playing audio
-        if (soundRef.current) {
-          await soundRef.current.stopAsync();
-          await soundRef.current.unloadAsync();
-          soundRef.current = null;
-        }
 
         // If same surah was playing, just stop it
         if (currentSurahPlaying === surahNomor && isPlayingFullSurah) {
+          await stopAndReset();
+          pendingPlaybackRef.current = null;
           setIsPlayingFullSurah(false);
+          setFullSurahLoading(false);
           setCurrentSurahPlaying(null);
           return;
         }
 
-        setFullSurahLoading(true);
+        if (status.playing) {
+          await stopAndReset();
+        }
+
         setCurrentSurahPlaying(surahNomor);
         setCurrentAyatId(null);
         setIsPlaying(false);
+        setIsPlayingFullSurah(false);
+        markPendingPlayback("surah");
 
-        console.log("Playing full surah from:", audioUrl);
+        logDev("Playing full surah from:", audioUrl);
+        logDev("Playing full surah from:", audioUrl);
 
-        const { sound } = await Audio.Sound.createAsync(
-          { uri: audioUrl },
-          { shouldPlay: true },
-        );
-
-        soundRef.current = sound;
-        setIsPlayingFullSurah(true);
-        setFullSurahLoading(false);
-
-        // Listen for playback status
-        sound.setOnPlaybackStatusUpdate((status) => {
-          if (status.isLoaded && status.didJustFinish) {
-            setIsPlayingFullSurah(false);
-            setCurrentSurahPlaying(null);
-          }
-        });
+        player.replace(audioUrl);
+        void player.seekTo(0);
+        player.play();
       } catch (error) {
-        console.error("Error playing full surah:", error);
+        errorDev("Error playing full surah:", error);
+        pendingPlaybackRef.current = null;
         setIsPlayingFullSurah(false);
         setFullSurahLoading(false);
         setCurrentSurahPlaying(null);
       }
     },
-    [currentSurahPlaying, isPlayingFullSurah],
+    [
+      currentSurahPlaying,
+      isPlayingFullSurah,
+      markPendingPlayback,
+      player,
+      status.playing,
+      stopAndReset,
+    ],
   );
 
-  // Cleanup on unmount
   useEffect(() => {
-    return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
-    };
-  }, []);
+    if (!pendingPlaybackRef.current || !status.playing) {
+      return;
+    }
+
+    if (pendingPlaybackRef.current === "ayat") {
+      setIsLoading(false);
+    } else {
+      setFullSurahLoading(false);
+    }
+
+    pendingPlaybackRef.current = null;
+  }, [status.playing]);
+
+  useEffect(() => {
+    if (!status.didJustFinish) {
+      return;
+    }
+
+    if (currentAyatId !== null) {
+      setIsPlaying(false);
+      setCurrentAyatId(null);
+    }
+
+    if (currentSurahPlaying !== null) {
+      setIsPlayingFullSurah(false);
+      setCurrentSurahPlaying(null);
+    }
+
+    pendingPlaybackRef.current = null;
+    setIsLoading(false);
+    setFullSurahLoading(false);
+    void player.seekTo(0);
+  }, [currentAyatId, currentSurahPlaying, player, status.didJustFinish]);
+
+  useEffect(() => {
+    if (currentAyatId !== null) {
+      setIsPlaying(status.playing);
+      setIsPlayingFullSurah(false);
+      return;
+    }
+
+    if (currentSurahPlaying !== null) {
+      setIsPlayingFullSurah(status.playing);
+      setIsPlaying(false);
+      return;
+    }
+
+    setIsPlaying(false);
+    setIsPlayingFullSurah(false);
+  }, [currentAyatId, currentSurahPlaying, status.playing]);
 
   return {
     playAyat,

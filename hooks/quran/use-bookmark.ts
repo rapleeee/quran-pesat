@@ -16,7 +16,9 @@ export function useBookmark() {
         setBookmarks(JSON.parse(stored));
       }
     } catch (error) {
-      console.error("Error loading bookmarks:", error);
+      if (__DEV__) {
+        console.error("Error loading bookmarks:", error);
+      }
     } finally {
       setLoading(false);
     }
@@ -31,7 +33,9 @@ export function useBookmark() {
       );
       setBookmarks(newBookmarks);
     } catch (error) {
-      console.error("Error saving bookmarks:", error);
+      if (__DEV__) {
+        console.error("Error saving bookmarks:", error);
+      }
     }
   }, []);
 

@@ -154,7 +154,7 @@ function SearchRow({ item }: { item: SearchItem }) {
   return (
     <TouchableOpacity
       onPress={() => router.push(item.route as never)}
-      className="px-4 py-3 bg-white border-b border-[#f0f0f0]"
+      className="px-4 py-3 bg-white dark:bg-[#111827] border-b border-[#f0f0f0] dark:border-[#1f2937]"
     >
       <View className="flex-row items-center">
         <View className="w-8 h-8 rounded-full bg-[#728d8d]/20 items-center justify-center mr-3">
@@ -165,8 +165,8 @@ function SearchRow({ item }: { item: SearchItem }) {
           )}
         </View>
         <View className="flex-1">
-          <Text className="text-[#363636] font-semibold">{item.title}</Text>
-          <Text className="text-gray-500 text-xs">{item.subtitle}</Text>
+          <Text className="text-[#363636] dark:text-[#f8fafc] font-semibold">{item.title}</Text>
+          <Text className="text-gray-500 dark:text-[#cbd5e1] text-xs">{item.subtitle}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -249,13 +249,13 @@ export default function SearchAllScreen() {
   }, [query, surahs]);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5] bg-[#fbf5ea]">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937] bg-[#fbf5ea] dark:bg-[#0b1220]">
         <View className="flex-row items-center">
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
-            <ArrowLeft size={24} color="#363636" />
+            <ArrowLeft size={24} color="#728d8d" />
           </TouchableOpacity>
-          <View className="flex-1 flex-row items-center bg-white rounded-xl px-3 py-2 border border-[#e5e5e5]">
+          <View className="flex-1 flex-row items-center bg-white dark:bg-[#111827] rounded-xl px-3 py-2 border border-[#e5e5e5] dark:border-[#1f2937]">
             <Search size={18} color="#9ca3af" />
             <TextInput
               autoFocus
@@ -263,7 +263,7 @@ export default function SearchAllScreen() {
               onChangeText={setQuery}
               placeholder="Cari surat, doa, artikel, menu..."
               placeholderTextColor="#9ca3af"
-              className="flex-1 ml-2 text-[#363636]"
+              className="flex-1 ml-2 text-[#363636] dark:text-[#f8fafc]"
             />
           </View>
         </View>
@@ -272,17 +272,17 @@ export default function SearchAllScreen() {
       {loading && query.length > 0 ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#728d8d" />
-          <Text className="text-gray-500 mt-2">Memuat data pencarian...</Text>
+          <Text className="text-gray-500 dark:text-[#cbd5e1] mt-2">Memuat data pencarian...</Text>
         </View>
       ) : query.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-gray-500 text-center">
+          <Text className="text-gray-500 dark:text-[#cbd5e1] text-center">
             Ketik kata kunci untuk mencari surah, doa, artikel, hadits, dan menu.
           </Text>
         </View>
       ) : results.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-gray-500 text-center">Hasil tidak ditemukan.</Text>
+          <Text className="text-gray-500 dark:text-[#cbd5e1] text-center">Hasil tidak ditemukan.</Text>
         </View>
       ) : (
         <FlatList

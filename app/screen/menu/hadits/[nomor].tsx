@@ -79,20 +79,20 @@ export default function HaditsDetailScreen() {
   const detailIsBookmarked = item ? isBookmarked(item) : false;
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937] flex-row items-center justify-between">
         <TouchableOpacity
           onPress={() => router.back()}
           className="w-11 h-11 items-center justify-center"
         >
-          <ArrowLeft size={20} color="#363636" />
+          <ArrowLeft size={20} color="#728d8d" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-[#363636]">Detail Hadits</Text>
+        <Text className="text-xl font-bold text-[#363636] dark:text-[#f8fafc]">Detail Hadits</Text>
         <TouchableOpacity
           onPress={() => void refetch()}
           className="w-11 h-11 items-center justify-center"
         >
-          <RefreshCw size={18} color="#363636" />
+          <RefreshCw size={18} color="#728d8d" />
         </TouchableOpacity>
       </View>
 
@@ -137,7 +137,7 @@ export default function HaditsDetailScreen() {
               <Text className="text-[#d7eceb] text-xs font-semibold uppercase">
                 Detail Hadits
               </Text>
-              <View className="px-2.5 py-1 rounded-full bg-white/20">
+              <View className="px-2.5 py-1 rounded-full bg-white dark:bg-[#111827]/20">
                 <Text className="text-white text-xs font-semibold">#{item.nomor}</Text>
               </View>
             </View>
@@ -145,25 +145,25 @@ export default function HaditsDetailScreen() {
               {item.title}
             </Text>
             {item.source ? (
-              <View className="self-start mt-3 px-2.5 py-1 rounded-full bg-white/15">
+              <View className="self-start mt-3 px-2.5 py-1 rounded-full bg-white dark:bg-[#111827]/15">
                 <Text className="text-[#dff5f4] text-xs font-medium">{item.source}</Text>
               </View>
             ) : null}
           </View>
 
           <View className="rounded-2xl bg-[#ecf4f3] border border-[#d7e8e6] p-5 mt-4">
-            <Text className="text-[#336363] text-xs font-semibold uppercase">Teks Arab</Text>
+            <Text className="text-[#336363] dark:text-[#9fb7b7] text-xs font-semibold uppercase">Teks Arab</Text>
             <Text
-              className="text-right text-[32px] leading-[50px] text-[#0f172a] mt-3"
+              className="text-right text-[32px] leading-[50px] text-[#0f172a] mt-3 font-arabic"
               style={{ writingDirection: "rtl" }}
             >
               {item.arabic || "-"}
             </Text>
           </View>
 
-          <View className="rounded-2xl bg-white border border-[#e5e5e5] p-5 mt-4">
-            <Text className="text-[#336363] text-xs font-semibold uppercase">Terjemahan</Text>
-            <Text className="text-[#374151] text-base leading-8 mt-3">
+          <View className="rounded-2xl bg-white dark:bg-[#111827] border border-[#e5e5e5] dark:border-[#1f2937] p-5 mt-4">
+            <Text className="text-[#336363] dark:text-[#9fb7b7] text-xs font-semibold uppercase">Terjemahan</Text>
+            <Text className="text-[#374151] dark:text-[#e5e7eb] text-base leading-8 mt-3">
               {item.translation || "Terjemahan belum tersedia."}
             </Text>
           </View>
@@ -171,7 +171,7 @@ export default function HaditsDetailScreen() {
           <View className="flex-row gap-3 mt-4">
             <TouchableOpacity
               onPress={() => void handleToggleBookmark()}
-              className="flex-1 min-h-[46px] rounded-xl border border-[#d1d5db] bg-white flex-row items-center justify-center gap-2"
+              className="flex-1 min-h-[46px] rounded-xl border border-[#d1d5db] dark:border-[#374151] bg-white dark:bg-[#111827] flex-row items-center justify-center gap-2"
             >
               <Bookmark
                 size={18}
@@ -179,17 +179,17 @@ export default function HaditsDetailScreen() {
                 fill={detailIsBookmarked ? "#1f2937" : "transparent"}
                 fillOpacity={detailIsBookmarked ? 0.9 : 0}
               />
-              <Text className="text-[#1f2937] font-medium">
+              <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-medium">
                 {detailIsBookmarked ? "Tersimpan" : "Simpan"}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleCopy}
-              className="flex-1 min-h-[46px] rounded-xl border border-[#d1d5db] bg-white flex-row items-center justify-center gap-2"
+              className="flex-1 min-h-[46px] rounded-xl border border-[#d1d5db] dark:border-[#374151] bg-white dark:bg-[#111827] flex-row items-center justify-center gap-2"
             >
               <Copy size={18} color="#1f2937" />
-              <Text className="text-[#1f2937] font-medium">Copy</Text>
+              <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-medium">Copy</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

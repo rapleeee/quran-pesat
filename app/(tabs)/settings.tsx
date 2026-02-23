@@ -1,11 +1,9 @@
 import { router } from "expo-router";
 import {
   Bell,
-  BookOpen,
   Coins,
   ChevronRight,
   CircleHelp,
-  Heart,
   Info,
   LogIn,
   LucideIcon,
@@ -16,12 +14,12 @@ import {
   Shield,
   Star,
   User,
-  Volume2,
 } from "lucide-react-native";
-import React, { useState } from "react";
+import React from "react";
 import {
   Alert,
   Linking,
+  Share,
   ScrollView,
   Switch,
   Text,
@@ -29,6 +27,12 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  ARABIC_FONT_SIZES,
+  getArabicFontSizeLabel,
+  useArabicFontSize,
+} from "@/hooks/quran/use-arabic-font-size";
+import { useThemePreference } from "@/hooks/use-theme-preference";
 
 const COLOR = "#728d8d";
 const STORE_URL =
@@ -36,7 +40,8 @@ const STORE_URL =
 
 const showAlert = (title: string, msg: string) =>
   Alert.alert(title, msg, [{ text: "OK" }]);
-const openUrl = (url: string) => Linking.openURL(url).catch(() => {});
+const openUrl = (url: string) =>
+  Linking.openURL(url).catch(() => showAlert("Gagal", "Tidak bisa membuka tautan."));
 
 type SettingConfig = {
   icon: LucideIcon;
@@ -64,9 +69,9 @@ function SettingItem({
         <Icon size={20} color={COLOR} />
       </View>
       <View className="flex-1">
-        <Text className="text-[#363636] font-medium">{title}</Text>
+        <Text className="text-[#363636] dark:text-[#f8fafc] font-medium">{title}</Text>
         {subtitle && (
-          <Text className="text-gray-400 text-xs mt-0.5">{subtitle}</Text>
+          <Text className="text-gray-400 dark:text-[#94a3b8] text-xs mt-0.5">{subtitle}</Text>
         )}
       </View>
       {toggle ? (
@@ -86,7 +91,7 @@ function SettingItem({
 function Section({ title, items }: { title: string; items: SettingConfig[] }) {
   return (
     <View className="mb-4">
-      <Text className="text-gray-400 text-xs font-medium px-4 mb-2 uppercase">
+      <Text className="text-gray-400 dark:text-[#94a3b8] text-xs font-medium px-4 mb-2 uppercase">
         {title}
       </Text>
       <View className="bg-[#728d8d]/10 rounded-xl mx-4 divide-y divide-[#728d8d]/20">
@@ -99,34 +104,33 @@ function Section({ title, items }: { title: string; items: SettingConfig[] }) {
 }
 
 export default function Settings() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [autoPlay, setAutoPlay] = useState(false);
+  const { isDark, setTheme } = useThemePreference();
+  const { fontSize, setFontSize } = useArabicFontSize();
+
+  const handleShareApp = async () => {
+    try {
+      await Share.share({
+        message: `Coba Quran Pesat sekarang juga.\n${STORE_URL}`,
+      });
+    } catch {
+      showAlert("Gagal", "Tidak bisa membagikan aplikasi saat ini.");
+    }
+  };
+
+  const handleFontSizePress = () => {
+    const options = ARABIC_FONT_SIZES.map((option) => ({
+      text:
+        option.value === fontSize ? `${option.label} ✓` : option.label,
+      onPress: () => setFontSize(option.value),
+    }));
+
+    Alert.alert("Ukuran Font Arab", "Pilih ukuran tampilan", [
+      ...options,
+      { text: "Batal", style: "cancel" },
+    ]);
+  };
 
   const sections = [
-    {
-      title: "Al-Quran",
-      items: [
-        {
-          icon: Volume2,
-          title: "Suara Aktif",
-          subtitle: "Aktifkan efek suara",
-          toggle: { value: soundEnabled, onChange: setSoundEnabled },
-        },
-        {
-          icon: BookOpen,
-          title: "Auto Play Audio",
-          subtitle: "Putar audio otomatis saat buka surah",
-          toggle: { value: autoPlay, onChange: setAutoPlay },
-        },
-        {
-          icon: Heart,
-          title: "Bookmark",
-          subtitle: "Lihat ayat yang disimpan",
-          onPress: () => router.push("/screen/bookmark"),
-        },
-      ],
-    },
     {
       title: "Notifikasi",
       items: [
@@ -145,13 +149,16 @@ export default function Settings() {
           icon: Moon,
           title: "Mode Gelap",
           subtitle: "Tampilan lebih nyaman di malam hari",
-          toggle: { value: darkMode, onChange: setDarkMode },
+          toggle: {
+            value: isDark,
+            onChange: (value) => setTheme(value ? "dark" : "light"),
+          },
         },
         {
           icon: Palette,
           title: "Ukuran Font Arab",
-          subtitle: "Sedang",
-          onPress: () => showAlert("Info", "Fitur akan segera hadir"),
+          subtitle: getArabicFontSizeLabel(fontSize),
+          onPress: handleFontSizePress,
         },
       ],
     },
@@ -174,7 +181,7 @@ export default function Settings() {
           icon: Share2,
           title: "Bagikan Aplikasi",
           subtitle: "Ajak teman menggunakan aplikasi ini",
-          onPress: () => openUrl(STORE_URL),
+          onPress: () => void handleShareApp(),
         },
         {
           icon: Mail,
@@ -201,25 +208,21 @@ export default function Settings() {
         {
           icon: Shield,
           title: "Kebijakan Privasi",
-          onPress: () =>
-            showAlert(
-              "Privasi",
-              "Data bookmark dan pengaturan hanya tersimpan di perangkat Anda.",
-            ),
+          onPress: () => router.push("/privacy"),
         },
         {
           icon: CircleHelp,
           title: "Bantuan & FAQ",
-          onPress: () => showAlert("Info", "Fitur akan segera hadir"),
+          onPress: () => router.push("/faq"),
         },
       ],
     },
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5]">
-        <Text className="font-bold text-2xl text-[#363636]">Pengaturan</Text>
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937]">
+        <Text className="font-bold text-2xl text-[#363636] dark:text-[#f8fafc]">Pengaturan</Text>
       </View>
 
       <ScrollView
@@ -239,10 +242,10 @@ export default function Settings() {
             <User size={28} color={COLOR} />
           </View>
           <View className="flex-1">
-            <Text className="text-[#363636] font-semibold text-lg">
+            <Text className="text-[#363636] dark:text-[#f8fafc] font-semibold text-lg">
               Masuk Akun
             </Text>
-            <Text className="text-gray-400 text-sm">
+            <Text className="text-gray-400 dark:text-[#94a3b8] text-sm">
               Sync bookmark & progress
             </Text>
           </View>
@@ -257,8 +260,8 @@ export default function Settings() {
         ))}
 
         <View className="items-center mt-4 mb-12">
-          <Text className="text-gray-400 text-xs">Quran Pesat v1.0.0</Text>
-          <Text className="text-gray-300 text-xs mt-1">
+          <Text className="text-gray-400 dark:text-[#94a3b8] text-xs">Quran Pesat v1.0.0</Text>
+          <Text className="text-gray-300 dark:text-[#94a3b8] text-xs mt-1">
             Made with ❤️ for Muslims
           </Text>
         </View>

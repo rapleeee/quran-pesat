@@ -1,56 +1,48 @@
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useThemePreference } from "@/hooks/use-theme-preference";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import "../app/style/global.css";
+import { useEffect } from "react";
+import "./style/global.css";
+
+void SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   anchor: "(tabs)",
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const { isDark } = useThemePreference();
+  const [fontsLoaded] = useFonts({
+    NotoNaskhArabic: require("@/assets/font/NotoNaskhArabic-VariableFont_wght.ttf"),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      void SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", title: "Modal" }}
         />
-        <Stack.Screen
-          name="screen/notification"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="asmaul-husna" options={{ headerShown: false }} />
-        <Stack.Screen name="donasi" options={{ headerShown: false }} />
-        <Stack.Screen name="doa" options={{ headerShown: false }} />
-        <Stack.Screen name="doa/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="hadits" options={{ headerShown: false }} />
-        <Stack.Screen name="hadits/[nomor]" options={{ headerShown: false }} />
-        <Stack.Screen name="hadits-bookmark" options={{ headerShown: false }} />
-        <Stack.Screen name="dzikir" options={{ headerShown: false }} />
-        <Stack.Screen name="dzikir-bookmark" options={{ headerShown: false }} />
-        <Stack.Screen name="voice-arab-guide" options={{ headerShown: false }} />
-        <Stack.Screen name="screen/search-all" options={{ headerShown: false }} />
-        <Stack.Screen name="kiblat" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="screen/surah/[nomor]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="screen/ayat/[nomor]/[ayat]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="screen/ai-chat" options={{ headerShown: false }} />
-        <Stack.Screen name="screen/bookmark" options={{ headerShown: false }} />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style={isDark ? "light" : "dark"} />
     </ThemeProvider>
   );
 }

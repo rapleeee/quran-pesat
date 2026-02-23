@@ -40,19 +40,19 @@ export function KiblatActionSheet({
         </Animated.View>
 
         <Animated.View style={{ transform: [{ translateY: sheetTranslateY }] }}>
-          <View className="bg-white rounded-t-3xl px-4 pb-8 pt-4">
+          <View className="bg-white dark:bg-[#111827] rounded-t-3xl px-4 pb-8 pt-4">
             <View className="w-12 h-1.5 bg-gray-300 rounded-full self-center mb-4" />
 
             <TouchableOpacity
               onPress={onRefreshLocation}
-              className="flex-row items-center gap-3 px-2 py-4 border-b border-[#e5e5e5]"
+              className="flex-row items-center gap-3 px-2 py-4 border-b border-[#e5e5e5] dark:border-[#1f2937]"
             >
-              <RefreshCw size={20} color="#363636" />
+              <RefreshCw size={20} color="#728d8d" />
               <View>
-                <Text className="text-[#363636] font-semibold">
+                <Text className="text-[#363636] dark:text-[#f8fafc] font-semibold">
                   Refresh Lokasi
                 </Text>
-                <Text className="text-xs text-gray-500">
+                <Text className="text-xs text-gray-500 dark:text-[#cbd5e1]">
                   Ambil ulang lokasi dan arah kiblat terbaru
                 </Text>
               </View>
@@ -62,12 +62,12 @@ export function KiblatActionSheet({
               onPress={onCompassCalibration}
               className="flex-row items-center gap-3 px-2 py-4"
             >
-              <Compass size={20} color="#363636" />
+              <Compass size={20} color="#728d8d" />
               <View>
-                <Text className="text-[#363636] font-semibold">
+                <Text className="text-[#363636] dark:text-[#f8fafc] font-semibold">
                   Kalibrasi Kompas
                 </Text>
-                <Text className="text-xs text-gray-500">
+                <Text className="text-xs text-gray-500 dark:text-[#cbd5e1]">
                   Tampilkan panduan kalibrasi dan perbarui heading
                 </Text>
               </View>

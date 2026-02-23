@@ -75,7 +75,9 @@ export function usePrayerTimes({
       const tanggalHariIni = today.getDate();
       const bulan = today.getMonth() + 1;
       const tahun = today.getFullYear();
-      const tanggalStr = today.toISOString().split("T")[0];
+      const tanggalStr = `${tahun}-${String(bulan).padStart(2, "0")}-${String(
+        tanggalHariIni,
+      ).padStart(2, "0")}`;
 
       const cacheKey = getCacheKey(provinceName, kabkota, bulan, tahun);
 
@@ -161,7 +163,9 @@ export function usePrayerTimes({
         setError(data.message || "Data jadwal tidak tersedia");
       }
     } catch (e) {
-      console.error("Error fetching prayer times:", e);
+      if (__DEV__) {
+        console.error("Error fetching prayer times:", e);
+      }
       setError("Gagal mengambil jadwal sholat");
     } finally {
       setLoading(false);

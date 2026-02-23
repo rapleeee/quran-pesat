@@ -18,7 +18,7 @@ function SurahItem({ surah }: { surah: Surah }) {
   return (
     <TouchableOpacity
       onPress={() => router.push(`/screen/surah/${surah.nomor}`)}
-      className="flex-row items-center px-4 py-3 border-b border-[#e5e5e5]"
+      className="flex-row items-center px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937]"
     >
       <View className="w-20 h-20 items-center justify-center mr-3">
         <Image
@@ -29,16 +29,16 @@ function SurahItem({ surah }: { surah: Surah }) {
         <Text className="font-bold text-[#728d8d] text-lg">{surah.nomor}</Text>
       </View>
       <View className="flex-1">
-        <Text className="font-semibold text-[#363636] text-base">
+        <Text className="font-semibold text-[#363636] dark:text-[#f8fafc] text-base">
           {surah.nama_latin}
         </Text>
-        <Text className="text-gray-500 text-xs">
+        <Text className="text-gray-500 dark:text-[#cbd5e1] text-xs">
           {surah.arti} • {surah.jumlah_ayat} Ayat
         </Text>
       </View>
       <View className="items-end">
         <Text className="font-arabic text-xl text-[#728d8d]">{surah.nama}</Text>
-        <Text className="text-xs text-gray-400">{surah.tempat_turun}</Text>
+        <Text className="text-xs text-gray-400 dark:text-[#94a3b8]">{surah.tempat_turun}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -56,37 +56,37 @@ export default function AlQuran() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5]">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937]">
         <View className="flex-row items-center justify-between mb-3">
           <View className="flex-row items-center gap-2">
             <BookOpen size={28} color="#728d8d" />
-            <Text className="font-bold text-2xl text-[#363636]">Al-Quran</Text>
+            <Text className="font-bold text-2xl text-[#363636] dark:text-[#f8fafc]">Al-Quran</Text>
           </View>
           <View className="flex-row items-center gap-3">
             <TouchableOpacity onPress={() => router.push("/screen/bookmark")}>
               <Bookmark size={24} color="#728d8d" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push("/(tabs)/settings")}>
+            <TouchableOpacity onPress={() => router.push("/screen/quran-settings")}>
               <Settings size={24} color="#728d8d" />
             </TouchableOpacity>
           </View>
         </View>
-        <View className="flex-row items-center bg-white rounded-xl px-3 py-2 border border-[#e5e5e5]">
+        <View className="flex-row items-center bg-white dark:bg-[#111827] rounded-xl px-3 py-2 border border-[#e5e5e5] dark:border-[#1f2937]">
           <Search size={20} color="#9ca3af" />
           <TextInput
             placeholder="Cari surah..."
             placeholderTextColor="#9ca3af"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            className="flex-1 ml-2 text-[#363636]"
+            className="flex-1 ml-2 text-[#363636] dark:text-[#f8fafc]"
           />
         </View>
       </View>
       {loading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#728d8d" />
-          <Text className="mt-2 text-gray-500">Memuat daftar surah...</Text>
+          <Text className="mt-2 text-gray-500 dark:text-[#cbd5e1]">Memuat daftar surah...</Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-4">
@@ -101,7 +101,7 @@ export default function AlQuran() {
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={
             <View className="items-center justify-center py-10">
-              <Text className="text-gray-500">Surah tidak ditemukan</Text>
+              <Text className="text-gray-500 dark:text-[#cbd5e1]">Surah tidak ditemukan</Text>
             </View>
           }
         />

@@ -18,12 +18,12 @@ export function DzikirCategoryTabs({
         className={`flex-1 min-h-[46px] items-center justify-center border-b-2 ${
           activeCategory === "harian"
             ? "border-[#728d8d] bg-[#728d8d]/10"
-            : "border-transparent bg-white"
+            : "border-transparent bg-white dark:bg-[#111827]"
         }`}
       >
         <Text
           className={`text-sm font-semibold ${
-            activeCategory === "harian" ? "text-[#336363]" : "text-[#4b5563]"
+            activeCategory === "harian" ? "text-[#336363] dark:text-[#9fb7b7]" : "text-[#4b5563] dark:text-[#cbd5e1]"
           }`}
         >
           Dzikir Harian
@@ -35,12 +35,12 @@ export function DzikirCategoryTabs({
         className={`flex-1 min-h-[46px] items-center justify-center border-b-2 ${
           activeCategory === "duha"
             ? "border-[#728d8d] bg-[#728d8d]/10"
-            : "border-transparent bg-white"
+            : "border-transparent bg-white dark:bg-[#111827]"
         }`}
       >
         <Text
           className={`text-sm font-semibold ${
-            activeCategory === "duha" ? "text-[#336363]" : "text-[#4b5563]"
+            activeCategory === "duha" ? "text-[#336363] dark:text-[#9fb7b7]" : "text-[#4b5563] dark:text-[#cbd5e1]"
           }`}
         >
           Dzikir Duha

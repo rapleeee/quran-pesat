@@ -52,30 +52,30 @@ const prayerData: PrayerItem[] = [
 
 function PrayerCard({ item }: { item: PrayerItem }) {
   return (
-    <View className="w-72 rounded-2xl bg-[#728d8d]/20 border border-[#e5e5e5] mr-3">
-      <View className="flex-row items-center p-3 border-b border-[#f0f0f0]">
+    <View className="w-72 rounded-2xl bg-[#728d8d]/20 border border-[#e5e5e5] dark:border-[#1f2937] mr-3">
+      <View className="flex-row items-center p-3 border-b border-[#f0f0f0] dark:border-[#1f2937]">
         <Image
           source={require("@/assets/logo/logo.png")}
           className="w-10 h-10 rounded-full"
         />
         <View className="ml-3 flex-1">
-          <Text className="font-semibold text-[#363636]">{item.name}</Text>
-          <Text className="text-xs text-gray-400">{item.time}</Text>
+          <Text className="font-semibold text-[#363636] dark:text-[#f8fafc]">{item.name}</Text>
+          <Text className="text-xs text-gray-400 dark:text-[#94a3b8]">{item.time}</Text>
         </View>
       </View>
       <View className="p-4">
-        <Text className="font-semibold text-[#363636] text-base mb-2">
+        <Text className="font-semibold text-[#363636] dark:text-[#f8fafc] text-base mb-2">
           {item.title}
         </Text>
         <Text className="text-[#666666] text-sm leading-5" numberOfLines={3}>
           {item.description}
         </Text>
       </View>
-      <View className="flex-row items-center justify-between px-4 py-3 border-t border-[#f0f0f0]">
+      <View className="flex-row items-center justify-between px-4 py-3 border-t border-[#f0f0f0] dark:border-[#1f2937]">
         <TouchableOpacity className="flex-row items-center gap-2">
           <Heart size={20} color="#728d8d" />
           <Text className="text-[#728d8d] font-medium">Aamiin</Text>
-          <Text className="text-gray-400 text-sm">({item.aamiin})</Text>
+          <Text className="text-gray-400 dark:text-[#94a3b8] text-sm">({item.aamiin})</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-row items-center gap-2">
           <Share2 size={18} color="#728d8d" />
@@ -89,7 +89,7 @@ export default function CardPrayer() {
   return (
     <View className="mt-6 mb-4">
       <View className="px-4 flex-row justify-between items-center mb-4">
-        <Text className="font-bold text-lg text-[#363636]">
+        <Text className="font-bold text-lg text-[#363636] dark:text-[#f8fafc]">
           Aminkan doa saudaramu
         </Text>
         <TouchableOpacity className="flex-row items-center gap-1">

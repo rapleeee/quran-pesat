@@ -66,15 +66,15 @@ export default function HaditsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937] flex-row items-center justify-between">
         <TouchableOpacity
           onPress={() => router.back()}
           className="w-11 h-11 items-center justify-center"
         >
-          <ArrowLeft size={20} color="#363636" />
+          <ArrowLeft size={20} color="#728d8d" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-[#363636]">Hadits</Text>
+        <Text className="text-xl font-bold text-[#363636] dark:text-[#f8fafc]">Hadits</Text>
         <TouchableOpacity
           onPress={() => router.push("/hadits-bookmark")}
           className="h-11 px-3 flex-row items-center justify-center gap-1"
@@ -84,14 +84,14 @@ export default function HaditsScreen() {
       </View>
 
       <View className="px-4 pt-3 pb-2">
-        <View className="min-h-[44px] rounded-xl border border-[#d8d8d8] bg-white px-3 flex-row items-center">
+        <View className="min-h-[44px] rounded-xl border border-[#d8d8d8] dark:border-[#374151] bg-white dark:bg-[#111827] px-3 flex-row items-center">
           <Search size={18} color="#6b7280" />
           <TextInput
             value={query}
             onChangeText={setQuery}
             placeholder="Cari judul hadits..."
             placeholderTextColor="#9ca3af"
-            className="flex-1 ml-2 text-[#1f2937] py-2"
+            className="flex-1 ml-2 text-[#1f2937] dark:text-[#e5e7eb] py-2"
             returnKeyType="search"
           />
           {query.length > 0 ? (
@@ -136,8 +136,8 @@ export default function HaditsScreen() {
           )}
           ListEmptyComponent={
             <View className="px-6 py-16 items-center">
-              <Text className="text-[#4b5563] text-center font-semibold">{emptyTitle}</Text>
-              <Text className="text-[#6b7280] text-center text-xs mt-2">{emptySubtitle}</Text>
+              <Text className="text-[#4b5563] dark:text-[#cbd5e1] text-center font-semibold">{emptyTitle}</Text>
+              <Text className="text-[#6b7280] dark:text-[#94a3b8] text-center text-xs mt-2">{emptySubtitle}</Text>
             </View>
           }
           contentContainerStyle={{ paddingTop: 8, paddingBottom: 120 }}

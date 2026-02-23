@@ -43,12 +43,12 @@ export default function RamadhanBanner({
     return (
       <View className="mx-4 p-4 bg-[#728d8d]/70 rounded-xl border-2 border-[#728d8d] mt-4">
         <View className="flex-row items-center gap-2 mb-1">
-          <Moon size={32} color="#363636" fill="orange" fillOpacity={0.8} />
+          <Moon size={32} color="#728d8d" fill="orange" fillOpacity={0.8} />
           <View className="flex-col flex-1">
-            <Text className="text-[#363636] font-bold text-xl">
+            <Text className="text-[#363636] dark:text-[#f8fafc] font-bold text-xl">
               {activeEvent.greetingTitle}
             </Text>
-            <Text className="text-[#363636]/90 text-xs">
+            <Text className="text-[#363636] dark:text-[#f8fafc]/90 text-xs">
               {activeEvent.greetingSubtitle}
             </Text>
           </View>
@@ -65,21 +65,21 @@ export default function RamadhanBanner({
     <View className="mx-4 mt-4 p-4 bg-[#728d8d]/70 rounded-xl border-2 border-[#728d8d]">
       <View className="flex-row items-center justify-between gap-3">
         <View className="flex-row items-center gap-2 flex-1">
-          <Moon size={30} color="#363636" fill="orange" fillOpacity={0.9} />
+          <Moon size={30} color="#728d8d" fill="orange" fillOpacity={0.9} />
           <View className="flex-col flex-1">
-            <Text className="text-[#363636] font-bold text-base">
+            <Text className="text-[#363636] dark:text-[#f8fafc] font-bold text-base">
               {upcomingEvent.upcomingTitle}
             </Text>
-            <Text className="text-[#363636]/75 text-sm" numberOfLines={2}>
+            <Text className="text-[#363636] dark:text-[#f8fafc]/75 text-sm" numberOfLines={2}>
               {upcomingEvent.name} • {formatEventDate(upcomingEvent.gregorianDate)}
             </Text>
           </View>
         </View>
         <View className="items-end border-l-2 border-[#728d8d] pl-3">
-          <Text className="text-[#363636] text-2xl font-bold">
+          <Text className="text-[#363636] dark:text-[#f8fafc] text-2xl font-bold">
             {upcomingEvent.daysUntil}
           </Text>
-          <Text className="text-[#363636]/90 text-xs">hari lagi</Text>
+          <Text className="text-[#363636] dark:text-[#f8fafc]/90 text-xs">hari lagi</Text>
         </View>
       </View>
     </View>

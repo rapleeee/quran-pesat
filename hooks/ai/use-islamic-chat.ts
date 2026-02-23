@@ -4,7 +4,8 @@ import {
 } from "@/data/ai-chat";
 import { generateIslamicAssistantReply } from "@/services/ai/islamic-chat-client";
 import { AIChatMessage, AIChatPayloadMessage } from "@/types/ai-chat";
-import { useCallback, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const ISLAMIC_KEYWORDS = [
   "islam",
@@ -88,6 +89,8 @@ interface UseIslamicChatResult {
   resetChat: () => void;
 }
 
+const CHAT_STORAGE_KEY = "ai_chat_history";
+
 function createMessageId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -152,15 +155,77 @@ function buildWelcomeMessage(): AIChatMessage {
   };
 }
 
+function isValidMessage(value: unknown): value is AIChatMessage {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+  const message = value as AIChatMessage;
+  return (
+    typeof message.id === "string" &&
+    (message.role === "assistant" || message.role === "user") &&
+    typeof message.content === "string" &&
+    typeof message.createdAt === "string"
+  );
+}
+
+function normalizeStoredMessages(value: unknown): AIChatMessage[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.filter(isValidMessage);
+}
+
 export function useIslamicChat(): UseIslamicChatResult {
   const [messages, setMessages] = useState<AIChatMessage[]>([buildWelcomeMessage()]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hydratedRef = useRef(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadHistory() {
+      try {
+        const stored = await AsyncStorage.getItem(CHAT_STORAGE_KEY);
+        if (!active) {
+          return;
+        }
+        if (stored) {
+          const parsed = JSON.parse(stored) as unknown;
+          const restored = normalizeStoredMessages(parsed);
+          setMessages(restored.length > 0 ? restored : [buildWelcomeMessage()]);
+        } else {
+          setMessages([buildWelcomeMessage()]);
+        }
+      } catch (loadError) {
+        if (__DEV__) {
+          console.error("Error loading chat history:", loadError);
+        }
+        setMessages([buildWelcomeMessage()]);
+      } finally {
+        hydratedRef.current = true;
+      }
+    }
+
+    loadHistory();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hydratedRef.current) {
+      return;
+    }
+    void AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
 
   const resetChat = useCallback(() => {
     setMessages([buildWelcomeMessage()]);
     setLoading(false);
     setError(null);
+    void AsyncStorage.removeItem(CHAT_STORAGE_KEY);
   }, []);
 
   const sendMessage = useCallback(

@@ -2,10 +2,11 @@ import { AI_QUICK_PROMPTS } from "@/data/ai-chat";
 import { useIslamicChat } from "@/hooks/ai/use-islamic-chat";
 import { AIChatMessage } from "@/types/ai-chat";
 import { router } from "expo-router";
-import { ArrowLeft, RotateCcw, Send, Sparkles } from "lucide-react-native";
+import { ArrowLeft, Send, Sparkles, Trash2 } from "lucide-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -74,7 +75,7 @@ function ChatBubble({ message }: { message: AIChatMessage }) {
 
   if (isAssistant) {
     return (
-      <View className="bg-white rounded-2xl p-4 mb-3 max-w-[88%] self-start border border-[#e9e9e9]">
+      <View className="bg-white dark:bg-[#111827] rounded-2xl p-4 mb-3 max-w-[88%] self-start border border-[#e9e9e9] dark:border-[#1f2937]">
         <View className="flex-row items-center mb-2">
           <View className="w-6 h-6 rounded-full bg-[#728d8d] items-center justify-center mr-2">
             <Sparkles size={12} color="#fff" />
@@ -83,8 +84,8 @@ function ChatBubble({ message }: { message: AIChatMessage }) {
         </View>
         <MarkdownText
           content={message.content}
-          className="text-[#363636] leading-6"
-          boldClassName="font-bold text-[#1f2937]"
+          className="text-[#363636] dark:text-[#f8fafc] leading-6"
+          boldClassName="font-bold text-[#1f2937] dark:text-[#e5e7eb]"
         />
       </View>
     );
@@ -136,26 +137,37 @@ export default function AIChat() {
     setMessage(prompt);
   };
 
+  const handleClearChat = () => {
+    Alert.alert(
+      "Hapus Riwayat",
+      "Semua percakapan akan dihapus. Lanjutkan?",
+      [
+        { text: "Batal", style: "cancel" },
+        { text: "Hapus", style: "destructive", onPress: resetChat },
+      ],
+    );
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="flex-row items-center px-4 py-3 border-b border-[#e5e5e5]">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="flex-row items-center px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937]">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <ArrowLeft size={24} color="#363636" />
+          <ArrowLeft size={24} color="#728d8d" />
         </TouchableOpacity>
         <View className="flex-row items-center flex-1">
           <View className="w-10 h-10 rounded-full bg-[#728d8d] items-center justify-center mr-3">
             <Sparkles size={20} color="#fff" />
           </View>
           <View className="flex-1">
-            <Text className="font-bold text-lg text-[#363636]">Asisten Islami AI</Text>
-            <Text className="text-xs text-gray-500">Fokus tanya jawab seputar Islam</Text>
+            <Text className="font-bold text-lg text-[#363636] dark:text-[#f8fafc]">Asisten Islami AI</Text>
+            <Text className="text-xs text-gray-500 dark:text-[#cbd5e1]">Fokus tanya jawab seputar Islam</Text>
           </View>
         </View>
         <TouchableOpacity
-          onPress={resetChat}
-          className="w-10 h-10 items-center justify-center rounded-full bg-white border border-[#e5e5e5]"
+          onPress={handleClearChat}
+          className="w-10 h-10 items-center justify-center rounded-full bg-white dark:bg-[#111827] border border-[#e5e5e5] dark:border-[#1f2937]"
         >
-          <RotateCcw size={16} color="#6b7280" />
+          <Trash2 size={16} color="#6b7280" />
         </TouchableOpacity>
       </View>
 
@@ -171,15 +183,15 @@ export default function AIChat() {
         >
           {showQuickPrompts ? (
             <View className="mb-4">
-              <Text className="text-[#4b5563] text-xs font-semibold mb-2">Contoh pertanyaan:</Text>
+              <Text className="text-[#4b5563] dark:text-[#cbd5e1] text-xs font-semibold mb-2">Contoh pertanyaan:</Text>
               <View className="gap-2">
                 {AI_QUICK_PROMPTS.map((prompt) => (
                   <TouchableOpacity
                     key={prompt}
                     onPress={() => handleQuickPrompt(prompt)}
-                    className="rounded-xl bg-white border border-[#e8e8e8] px-3 py-2"
+                    className="rounded-xl bg-white dark:bg-[#111827] border border-[#e8e8e8] dark:border-[#1f2937] px-3 py-2"
                   >
-                    <Text className="text-[#374151] text-sm">{prompt}</Text>
+                    <Text className="text-[#374151] dark:text-[#e5e7eb] text-sm">{prompt}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -191,18 +203,18 @@ export default function AIChat() {
           ))}
 
           {loading ? (
-            <View className="bg-white rounded-2xl px-4 py-3 self-start border border-[#e5e5e5] flex-row items-center gap-2">
+            <View className="bg-white dark:bg-[#111827] rounded-2xl px-4 py-3 self-start border border-[#e5e5e5] dark:border-[#1f2937] flex-row items-center gap-2">
               <ActivityIndicator size="small" color="#728d8d" />
-              <Text className="text-[#6b7280] text-sm">Asisten sedang mengetik...</Text>
+              <Text className="text-[#6b7280] dark:text-[#94a3b8] text-sm">Asisten sedang mengetik...</Text>
             </View>
           ) : null}
 
           {error ? <Text className="text-xs text-red-500 mt-3">{error}</Text> : null}
         </ScrollView>
 
-        <View className="px-4 pb-6 pt-2 border-t border-[#e5e5e5] bg-[#fbf5ea]">
+        <View className="px-4 pb-6 pt-2 border-t border-[#e5e5e5] dark:border-[#1f2937] bg-[#fbf5ea] dark:bg-[#0b1220]">
           <View className="flex-row items-end gap-2">
-            <View className="flex-1 bg-white rounded-2xl px-4 py-3 border border-[#e5e5e5]">
+            <View className="flex-1 bg-white dark:bg-[#111827] rounded-2xl px-4 py-3 border border-[#e5e5e5] dark:border-[#1f2937]">
               <TextInput
                 placeholder="Tanyakan seputar Islam..."
                 placeholderTextColor="#9ca3af"
@@ -210,7 +222,7 @@ export default function AIChat() {
                 onChangeText={setMessage}
                 multiline
                 maxLength={1000}
-                className="text-[#363636] max-h-24"
+                className="text-[#363636] dark:text-[#f8fafc] max-h-24"
               />
             </View>
             <TouchableOpacity

@@ -31,15 +31,15 @@ export default function HaditsBookmarkScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937] flex-row items-center justify-between">
         <TouchableOpacity
           onPress={() => router.back()}
           className="w-11 h-11 items-center justify-center"
         >
-          <ArrowLeft size={20} color="#363636" />
+          <ArrowLeft size={20} color="#728d8d" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-[#363636]">Bookmark Hadits</Text>
+        <Text className="text-xl font-bold text-[#363636] dark:text-[#f8fafc]">Bookmark Hadits</Text>
         <View className="w-11 h-11" />
       </View>
 
@@ -62,10 +62,10 @@ export default function HaditsBookmarkScreen() {
           )}
           ListEmptyComponent={
             <View className="px-6 py-16 items-center">
-              <Text className="text-[#4b5563] text-center font-semibold">
+              <Text className="text-[#4b5563] dark:text-[#cbd5e1] text-center font-semibold">
                 Belum ada bookmark hadits.
               </Text>
-              <Text className="text-[#6b7280] text-center text-xs mt-2">
+              <Text className="text-[#6b7280] dark:text-[#94a3b8] text-center text-xs mt-2">
                 Buka halaman hadits lalu tekan tombol simpan pada item.
               </Text>
             </View>

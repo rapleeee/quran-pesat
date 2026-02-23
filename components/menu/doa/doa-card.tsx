@@ -87,19 +87,19 @@ export function DoaCard({
       onPress={() => onPress(item)}
       onLongPress={() => onLongPress(item)}
       delayLongPress={220}
-      className="mx-4 mb-3 rounded-2xl bg-white border border-[#e5e5e5] p-4"
+      className="mx-4 mb-3 rounded-2xl bg-white dark:bg-[#111827] border border-[#e5e5e5] dark:border-[#1f2937] p-4"
     >
       <View className="flex-row items-start justify-between gap-3">
         <View className="flex-1">
           <HighlightText
             text={item.title}
             query={query}
-            className="text-[#1f2937] font-semibold text-base"
-            highlightClassName="bg-[#f6c76d]/35 text-[#1f2937]"
+            className="text-[#1f2937] dark:text-[#e5e7eb] font-semibold text-base"
+            highlightClassName="bg-[#f6c76d]/35 text-[#1f2937] dark:text-[#e5e7eb]"
             numberOfLines={2}
           />
           <Text
-            className="text-[#6b7280] text-xs mt-1"
+            className="text-[#6b7280] dark:text-[#94a3b8] text-xs mt-1 font-arabic"
             numberOfLines={1}
             style={{ writingDirection: "rtl" }}
           >
@@ -108,8 +108,8 @@ export function DoaCard({
           <HighlightText
             text={item.translation}
             query={query}
-            className="text-[#4b5563] text-xs mt-2"
-            highlightClassName="bg-[#f6c76d]/35 text-[#374151]"
+            className="text-[#4b5563] dark:text-[#cbd5e1] text-xs mt-2"
+            highlightClassName="bg-[#f6c76d]/35 text-[#374151] dark:text-[#e5e7eb]"
             numberOfLines={2}
           />
         </View>
@@ -127,7 +127,7 @@ export function DoaCard({
             />
           </TouchableOpacity>
           <View className="px-2 py-1 rounded-md bg-[#728d8d]/15">
-            <Text className="text-[#336363] text-[11px] font-semibold">
+            <Text className="text-[#336363] dark:text-[#9fb7b7] text-[11px] font-semibold">
               #{item.id}
             </Text>
           </View>

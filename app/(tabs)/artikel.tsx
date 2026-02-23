@@ -38,76 +38,6 @@ const RSS_FEEDS = [
   },
 ];
 
-// Mock data as fallback when API fails
-const mockArticles: Article[] = [
-  {
-    id: "1",
-    title: "Keutamaan Membaca Al-Quran di Bulan Ramadhan",
-    description:
-      "Membaca Al-Quran di bulan Ramadhan memiliki keutamaan yang berlipat ganda. Rasulullah SAW bersabda bahwa setiap huruf yang dibaca mendapat 10 kebaikan.",
-    image: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=400",
-    source: "Republika",
-    publishedAt: "2026-02-12",
-    url: "https://republika.co.id",
-    category: "Ramadhan",
-  },
-  {
-    id: "2",
-    title: "Tata Cara Sholat Tahajud yang Benar",
-    description:
-      "Sholat tahajud adalah sholat sunnah yang dikerjakan pada malam hari setelah tidur. Berikut panduan lengkap tata cara sholat tahajud.",
-    image: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=400",
-    source: "NU Online",
-    publishedAt: "2026-02-11",
-    url: "https://nu.or.id",
-    category: "Ibadah",
-  },
-  {
-    id: "3",
-    title: "Kisah Nabi Yusuf AS: Teladan Kesabaran",
-    description:
-      "Nabi Yusuf AS adalah contoh teladan dalam kesabaran menghadapi cobaan hidup. Dari dibuang ke sumur hingga menjadi menteri di Mesir.",
-    image: "https://images.unsplash.com/photo-1585036156171-384164a8c675?w=400",
-    source: "Kemenag",
-    publishedAt: "2026-02-10",
-    url: "https://kemenag.go.id",
-    category: "Kisah Nabi",
-  },
-  {
-    id: "4",
-    title: "Panduan Zakat Fitrah: Syarat dan Ketentuan",
-    description:
-      "Zakat fitrah wajib dikeluarkan sebelum sholat Idul Fitri. Ketahui syarat, ketentuan, dan cara menghitung zakat fitrah.",
-    image: "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=400",
-    source: "Republika",
-    publishedAt: "2026-02-09",
-    url: "https://republika.co.id",
-    category: "Zakat",
-  },
-  {
-    id: "5",
-    title: "Doa-doa Penting Sehari-hari untuk Muslim",
-    description:
-      "Kumpulan doa sehari-hari yang penting untuk diamalkan, mulai dari bangun tidur hingga hendak tidur kembali.",
-    image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=400",
-    source: "NU Online",
-    publishedAt: "2026-02-08",
-    url: "https://nu.or.id",
-    category: "Doa",
-  },
-  {
-    id: "6",
-    title: "Tafsir Surah Al-Fatihah: Makna dan Kandungan",
-    description:
-      "Al-Fatihah adalah surah pembuka Al-Quran yang wajib dibaca dalam setiap rakaat sholat. Pelajari tafsir dan makna mendalam surah ini.",
-    image: "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=400",
-    source: "Kemenag",
-    publishedAt: "2026-02-07",
-    url: "https://kemenag.go.id",
-    category: "Tafsir",
-  },
-];
-
 const categories = [
   "Semua",
   "Islam",
@@ -137,7 +67,7 @@ function ArticleCard({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="mx-4 mb-4 bg-white rounded-xl overflow-hidden"
+      className="mx-4 mb-4 bg-white dark:bg-[#111827] rounded-xl overflow-hidden"
       activeOpacity={0.7}
     >
       <Image
@@ -153,18 +83,18 @@ function ArticleCard({
               {article.category}
             </Text>
           </View>
-          <Text className="text-gray-400 text-xs ml-auto">
+          <Text className="text-gray-400 dark:text-[#94a3b8] text-xs ml-auto">
             {formatDate(article.publishedAt)}
           </Text>
         </View>
-        <Text className="font-semibold text-[#363636] text-base mb-2">
+        <Text className="font-semibold text-[#363636] dark:text-[#f8fafc] text-base mb-2">
           {article.title}
         </Text>
-        <Text className="text-gray-500 text-sm leading-5" numberOfLines={2}>
+        <Text className="text-gray-500 dark:text-[#cbd5e1] text-sm leading-5" numberOfLines={2}>
           {article.description}
         </Text>
-        <View className="flex-row items-center justify-between mt-3 pt-3 border-t border-gray-100">
-          <Text className="text-gray-400 text-xs">{article.source}</Text>
+        <View className="flex-row items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-[#1f2937]">
+          <Text className="text-gray-400 dark:text-[#94a3b8] text-xs">{article.source}</Text>
           <View className="flex-row items-center">
             <Text className="text-[#728d8d] text-xs mr-1">
               Baca Selengkapnya
@@ -185,7 +115,7 @@ function CategoryFilter({
   onSelect: (cat: string) => void;
 }) {
   return (
-    <View className="border-b border-[#e5e5e5]">
+    <View className="border-b border-[#e5e5e5] dark:border-[#1f2937]">
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -202,13 +132,13 @@ function CategoryFilter({
               className={`text-sm ${
                 selected === item
                   ? "text-[#728d8d] font-semibold"
-                  : "text-gray-400"
+                  : "text-gray-400 dark:text-[#94a3b8]"
               }`}
             >
               {item}
             </Text>
             {index < categories.length - 1 && (
-              <Text className="text-gray-300 mx-3">•</Text>
+              <Text className="text-gray-300 dark:text-[#94a3b8] mx-3">•</Text>
             )}
           </TouchableOpacity>
         ))}
@@ -224,8 +154,12 @@ export default function Artikel() {
   const [selectedCategory, setSelectedCategory] = useState("Semua");
   const [error, setError] = useState<string | null>(null);
 
-  const fetchArticles = useCallback(async () => {
+  const fetchArticles = useCallback(async (options?: { showLoader?: boolean }) => {
+    const showLoader = options?.showLoader ?? true;
     try {
+      if (showLoader) {
+        setLoading(true);
+      }
       setError(null);
 
       // Try fetching from RSS2JSON API
@@ -234,6 +168,9 @@ export default function Artikel() {
       // - GNews: https://gnews.io/api/v4/search?q=islam&lang=id&token=YOUR_KEY
 
       const response = await fetch(RSS_FEEDS[0].url);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       const data = await response.json();
 
       if (data.status === "ok" && data.items) {
@@ -255,33 +192,36 @@ export default function Artikel() {
             category: "Islam",
           }));
         setArticles(fetchedArticles);
+        setError(null);
       } else {
-        // Fallback to mock data
-        setArticles(mockArticles);
+        throw new Error("Data artikel tidak tersedia");
       }
-    } catch (err) {
-      console.log("Using mock data due to fetch error");
-      setArticles(mockArticles);
+    } catch {
+      setError("Gagal memuat artikel. Coba lagi.");
+      setArticles([]);
     } finally {
-      setLoading(false);
+      if (showLoader) {
+        setLoading(false);
+      }
       setRefreshing(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchArticles();
+    fetchArticles({ showLoader: true });
   }, [fetchArticles]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchArticles();
+    fetchArticles({ showLoader: false });
   }, [fetchArticles]);
 
   const handleArticlePress = (article: Article) => {
     // Open article in browser
     Linking.openURL(article.url).catch(() => {
-      // If can't open URL, just log
-      console.log("Cannot open URL:", article.url);
+      if (__DEV__) {
+        console.log("Cannot open URL:", article.url);
+      }
     });
   };
 
@@ -291,14 +231,14 @@ export default function Artikel() {
       : articles.filter((a) => a.category === selectedCategory);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
       {/* Header */}
-      <View className="px-4 py-3 border-b border-[#e5e5e5]">
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937]">
         <View className="flex-row items-center gap-2">
           <BookOpen size={28} color="#728d8d" />
-          <Text className="font-bold text-2xl text-[#363636]">Artikel</Text>
+          <Text className="font-bold text-2xl text-[#363636] dark:text-[#f8fafc]">Artikel</Text>
         </View>
-        <Text className="text-gray-500 text-sm mt-1">
+        <Text className="text-gray-500 dark:text-[#cbd5e1] text-sm mt-1">
           Berita dan artikel Islami terkini
         </Text>
       </View>
@@ -313,13 +253,13 @@ export default function Artikel() {
       {loading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#728d8d" />
-          <Text className="mt-2 text-gray-500">Memuat artikel...</Text>
+          <Text className="mt-2 text-gray-500 dark:text-[#cbd5e1]">Memuat artikel...</Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-4">
           <Text className="text-red-500 text-center mb-4">{error}</Text>
           <TouchableOpacity
-            onPress={fetchArticles}
+            onPress={() => fetchArticles({ showLoader: true })}
             className="flex-row items-center bg-[#728d8d] px-4 py-2 rounded-lg"
           >
             <RefreshCw size={16} color="#fff" />
@@ -353,7 +293,7 @@ export default function Artikel() {
           ListEmptyComponent={
             <View className="items-center justify-center py-10 px-4">
               <BookOpen size={64} color="#9ca3af" />
-              <Text className="text-gray-500 mt-4 text-center">
+              <Text className="text-gray-500 dark:text-[#cbd5e1] mt-4 text-center">
                 Tidak ada artikel untuk kategori ini
               </Text>
             </View>

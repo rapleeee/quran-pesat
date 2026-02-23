@@ -40,7 +40,7 @@ export default function DzikirBookmarkScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
       <DzikirScreenHeader
         title="Bookmark Dzikir"
         onBack={() => router.back()}
@@ -66,10 +66,10 @@ export default function DzikirBookmarkScreen() {
           )}
           ListEmptyComponent={
             <View className="px-6 py-16 items-center">
-              <Text className="text-[#4b5563] text-center font-semibold">
+              <Text className="text-[#4b5563] dark:text-[#cbd5e1] text-center font-semibold">
                 Belum ada bookmark dzikir.
               </Text>
-              <Text className="text-[#6b7280] text-center text-xs mt-2">
+              <Text className="text-[#6b7280] dark:text-[#94a3b8] text-center text-xs mt-2">
                 Kembali ke halaman dzikir lalu tekan ikon bookmark pada item.
               </Text>
             </View>

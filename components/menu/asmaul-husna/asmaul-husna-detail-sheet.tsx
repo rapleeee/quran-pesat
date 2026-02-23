@@ -74,7 +74,7 @@ export function AsmaulHusnaDetailSheet({
         </Animated.View>
 
         <Animated.View style={{ transform: [{ translateY: sheetTranslateY }] }}>
-          <View className="bg-white rounded-t-3xl px-5 pb-8 pt-4">
+          <View className="bg-white dark:bg-[#111827] rounded-t-3xl px-5 pb-8 pt-4">
             <View className="w-12 h-1.5 bg-gray-300 rounded-full self-center mb-4" />
 
             {item ? (
@@ -83,15 +83,15 @@ export function AsmaulHusnaDetailSheet({
                   {item.id}
                 </Text>
                 <Text
-                  className="text-right text-[40px] leading-[52px] text-[#1f2937] mt-2"
+                  className="text-right text-[40px] leading-[52px] text-[#1f2937] dark:text-[#e5e7eb] mt-2 font-arabic"
                   style={{ writingDirection: "rtl" }}
                 >
                   {item.arabic}
                 </Text>
-                <Text className="text-[#1f2937] font-bold text-lg mt-2">
+                <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-bold text-lg mt-2">
                   {item.latin}
                 </Text>
-                <Text className="text-[#374151] text-sm leading-6 mt-2">
+                <Text className="text-[#374151] dark:text-[#e5e7eb] text-sm leading-6 mt-2">
                   {item.meaning}
                 </Text>
 
@@ -99,10 +99,10 @@ export function AsmaulHusnaDetailSheet({
                   <TouchableOpacity
                     onPress={onCopy}
                     activeOpacity={0.8}
-                    className="flex-1 min-h-[44px] rounded-xl border border-[#d1d5db] flex-row items-center justify-center gap-2"
+                    className="flex-1 min-h-[44px] rounded-xl border border-[#d1d5db] dark:border-[#374151] flex-row items-center justify-center gap-2"
                   >
                     <Copy size={18} color="#1f2937" />
-                    <Text className="text-[#1f2937] font-medium">Copy</Text>
+                    <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-medium">Copy</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity

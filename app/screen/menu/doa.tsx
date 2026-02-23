@@ -84,7 +84,7 @@ function SmoothSkeletonCard() {
   return (
     <Animated.View
       style={{ opacity }}
-      className="mx-4 mb-3 rounded-2xl bg-[#e9e4d8] border border-[#e5e5e5] p-4"
+      className="mx-4 mb-3 rounded-2xl bg-[#e9e4d8] dark:bg-[#1f2937] border border-[#e5e5e5] dark:border-[#1f2937] p-4"
     >
       <View className="h-4 w-44 rounded bg-[#d9d2c3]" />
       <View className="h-3 w-60 rounded bg-[#d9d2c3] mt-2" />
@@ -237,32 +237,32 @@ export default function DoaHarianScreen() {
   }, [activeTab, query]);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#fbf5ea]" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-[#e5e5e5] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-[#fbf5ea] dark:bg-[#0b1220]" edges={["top"]}>
+      <View className="px-4 py-3 border-b border-[#e5e5e5] dark:border-[#1f2937] flex-row items-center justify-between">
         <TouchableOpacity
           onPress={() => router.back()}
           className="w-11 h-11 items-center justify-center"
         >
-          <ArrowLeft size={20} color="#363636" />
+          <ArrowLeft size={20} color="#728d8d" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-[#363636]">Doa Harian</Text>
+        <Text className="text-xl font-bold text-[#363636] dark:text-[#f8fafc]">Doa Harian</Text>
         <TouchableOpacity
           onPress={() => void handleRefresh()}
           className="w-11 h-11 items-center justify-center"
         >
-          <RefreshCw size={18} color="#363636" />
+          <RefreshCw size={18} color="#728d8d" />
         </TouchableOpacity>
       </View>
 
       <View className="px-4 pt-3 pb-2">
-        <View className="min-h-[44px] rounded-xl border border-[#d8d8d8] bg-white px-3 flex-row items-center">
+        <View className="min-h-[44px] rounded-xl border border-[#d8d8d8] dark:border-[#374151] bg-white dark:bg-[#111827] px-3 flex-row items-center">
           <Search size={18} color="#6b7280" />
           <TextInput
             value={query}
             onChangeText={setQuery}
             placeholder="Cari judul, arti, latin..."
             placeholderTextColor="#9ca3af"
-            className="flex-1 ml-2 text-[#1f2937] py-2"
+            className="flex-1 ml-2 text-[#1f2937] dark:text-[#e5e7eb] py-2"
           />
           {query.length > 0 ? (
             <TouchableOpacity
@@ -279,12 +279,12 @@ export default function DoaHarianScreen() {
         <TouchableOpacity
           onPress={() => setActiveTab("all")}
           className={`px-4 min-h-[36px] rounded-full items-center justify-center ${
-            activeTab === "all" ? "bg-[#728d8d]" : "bg-white border border-[#d8d8d8]"
+            activeTab === "all" ? "bg-[#728d8d]" : "bg-white dark:bg-[#111827] border border-[#d8d8d8] dark:border-[#374151]"
           }`}
         >
           <Text
             className={`text-xs font-semibold ${
-              activeTab === "all" ? "text-white" : "text-[#4b5563]"
+              activeTab === "all" ? "text-white" : "text-[#4b5563] dark:text-[#cbd5e1]"
             }`}
           >
             Semua
@@ -295,12 +295,12 @@ export default function DoaHarianScreen() {
           className={`px-4 min-h-[36px] rounded-full items-center justify-center ${
             activeTab === "favorites"
               ? "bg-[#728d8d]"
-              : "bg-white border border-[#d8d8d8]"
+              : "bg-white dark:bg-[#111827] border border-[#d8d8d8] dark:border-[#374151]"
           }`}
         >
           <Text
             className={`text-xs font-semibold ${
-              activeTab === "favorites" ? "text-white" : "text-[#4b5563]"
+              activeTab === "favorites" ? "text-white" : "text-[#4b5563] dark:text-[#cbd5e1]"
             }`}
           >
             Favorit ({favoriteIds.length})
@@ -356,10 +356,10 @@ export default function DoaHarianScreen() {
           )}
           ListEmptyComponent={
             <View className="px-6 py-16 items-center">
-              <Text className="text-[#4b5563] text-center font-semibold">
+              <Text className="text-[#4b5563] dark:text-[#cbd5e1] text-center font-semibold">
                 {emptyTitle}
               </Text>
-              <Text className="text-[#6b7280] text-center text-xs mt-2">
+              <Text className="text-[#6b7280] dark:text-[#94a3b8] text-center text-xs mt-2">
                 {emptySubtitle}
               </Text>
             </View>

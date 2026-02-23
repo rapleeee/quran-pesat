@@ -29,8 +29,8 @@ const IMAGE_HEIGHT = SCREEN_HEIGHT * 0.42;
 function LocationSkeleton() {
   return (
     <View className="mt-1">
-      <View className="h-3 w-28 bg-white/40 rounded" />
-      <View className="h-3 w-44 bg-white/30 rounded mt-1" />
+      <View className="h-3 w-28 bg-white dark:bg-[#111827]/40 rounded" />
+      <View className="h-3 w-44 bg-white dark:bg-[#111827]/30 rounded mt-1" />
     </View>
   );
 }
@@ -78,7 +78,7 @@ export default function Index() {
 
   return (
     <ScrollView
-      className="bg-[#fbf5ea] flex-1"
+      className="bg-[#fbf5ea] dark:bg-[#0b1220] flex-1"
       bounces
       alwaysBounceVertical
       showsVerticalScrollIndicator={false}
@@ -94,7 +94,7 @@ export default function Index() {
       }
       contentContainerStyle={{ paddingBottom: 120 }}
     >
-      <View className="bg-[#fbf5ea] flex-1">
+      <View className="bg-[#fbf5ea] dark:bg-[#0b1220] flex-1">
         <Image
           source={require("@/assets/images/element.png")}
           style={{ width: "100%", height: IMAGE_HEIGHT }}
@@ -145,7 +145,7 @@ export default function Index() {
             <TextInput
               placeholder="Cari surat, doa, artikel, hadits ..."
               placeholderTextColor={"gray"}
-              className="flex-1 text-sm text-[#336363]"
+              className="flex-1 text-sm text-[#336363] dark:text-[#9fb7b7]"
               editable={false}
               pointerEvents="none"
             />
@@ -156,7 +156,7 @@ export default function Index() {
           <RamadhanBanner key={bannerVersion} />
           <CardPrayer />
           <View className="mt-8 mb-24">
-            <Text className="px-4 font-light text-xs text-center text-[#336363] mb-6">
+            <Text className="px-4 font-light text-xs text-center text-[#336363] dark:text-[#9fb7b7] mb-6">
               Semua operasional aplikasi ini di develop dengan individu {"\n"}
               bukan kelompok atau organisasi masyarakat
             </Text>
