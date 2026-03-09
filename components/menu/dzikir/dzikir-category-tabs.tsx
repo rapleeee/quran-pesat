@@ -1,3 +1,4 @@
+import { FeatureStatusBadge } from "@/components/feature-status-badge";
 import { DzikirCategory } from "@/data/dzikir";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -45,6 +46,7 @@ export function DzikirCategoryTabs({
         >
           Dzikir Duha
         </Text>
+        <FeatureStatusBadge status="develop" />
       </TouchableOpacity>
     </View>
   );

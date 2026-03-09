@@ -1,3 +1,8 @@
+import { FeatureStatusBadge } from "@/components/feature-status-badge";
+import {
+  getFeatureStatusByRoute,
+  getFeatureWarningByRoute,
+} from "@/data/feature-status";
 import { menuItems } from "@/data/menu-beranda";
 import { router } from "expo-router";
 import {
@@ -9,7 +14,7 @@ import {
   Settings,
 } from "lucide-react-native";
 import React from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MenuBeranda from "@/components/menu-beranda";
 
@@ -48,12 +53,24 @@ const EXTRA_ITEMS: LainnyaItem[] = [
 export default function LainnyaScreen() {
   const primaryItems = menuItems.filter((item) => item.id !== "lainnya");
 
+  const handleRoutePress = (route: string) => {
+    const warning = getFeatureWarningByRoute(route);
+    if (warning) {
+      Alert.alert(warning.title, warning.message);
+      return;
+    }
+
+    router.push(route);
+  };
+
   const renderItem = (item: LainnyaItem) => {
     const Icon = item.icon;
+    const status = getFeatureStatusByRoute(item.route);
+
     return (
       <TouchableOpacity
         key={item.id}
-        onPress={() => router.push(item.route)}
+        onPress={() => handleRoutePress(item.route)}
         className="mb-3 bg-white dark:bg-[#111827] rounded-2xl border border-[#e5e5e5] dark:border-[#1f2937] px-4 py-4 flex-row items-center"
         activeOpacity={0.8}
       >
@@ -63,6 +80,7 @@ export default function LainnyaScreen() {
         <View className="flex-1">
           <Text className="text-[#1f2937] dark:text-[#e5e7eb] font-semibold">{item.title}</Text>
           <Text className="text-[#6b7280] dark:text-[#94a3b8] text-xs mt-1">{item.subtitle}</Text>
+          {status !== "active" ? <FeatureStatusBadge status={status} /> : null}
         </View>
         <ChevronRight size={18} color="#9ca3af" />
       </TouchableOpacity>

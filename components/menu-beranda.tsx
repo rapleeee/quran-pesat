@@ -1,8 +1,19 @@
+import { FeatureStatusBadge } from "@/components/feature-status-badge";
+import {
+  getFeatureStatusByRoute,
+  getFeatureWarningByRoute,
+} from "@/data/feature-status";
 import { menuItems } from "@/data/menu-beranda";
 import { MenuItem } from "@/types/menu";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import {
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 const DEFAULT_COLUMNS = 4;
 const DEFAULT_GAP = 12;
 const HORIZONTAL_PADDING = 16;
@@ -27,6 +38,11 @@ export default function MenuBeranda({
     if (item.onPress) {
       item.onPress();
     } else if (item.route) {
+      const warning = getFeatureWarningByRoute(item.route);
+      if (warning) {
+        Alert.alert(warning.title, warning.message);
+        return;
+      }
       router.push(item.route as any);
     }
   };
@@ -36,6 +52,7 @@ export default function MenuBeranda({
       <View className="flex-row flex-wrap">
         {items.map((item, index) => {
           const Icon = item.icon;
+          const status = getFeatureStatusByRoute(item.route);
           const isLastColumn = (index + 1) % columns === 0;
           return (
             <TouchableOpacity
@@ -61,6 +78,7 @@ export default function MenuBeranda({
               >
                 {item.label}
               </Text>
+              {status !== "active" ? <FeatureStatusBadge status={status} /> : null}
             </TouchableOpacity>
           );
         })}

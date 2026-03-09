@@ -16,6 +16,7 @@ import { Bookmark } from "lucide-react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   RefreshControl,
   Text,
@@ -58,6 +59,19 @@ export default function DzikirScreen() {
     return items.filter((item) => item.type === activeType);
   }, [activeType, items]);
 
+  const handleCategoryChange = useCallback(
+    (category: DzikirCategory) => {
+      if (category === "duha" && activeCategory !== "duha") {
+        Alert.alert(
+          "Fitur Sedang Develop",
+          "Dzikir Duha sedang dalam tahap pengembangan.",
+        );
+      }
+      setActiveCategory(category);
+    },
+    [activeCategory],
+  );
+
   useFocusEffect(
     useCallback(() => {
       void refreshBookmarks();
@@ -92,7 +106,10 @@ export default function DzikirScreen() {
         }
       />
 
-      <DzikirCategoryTabs activeCategory={activeCategory} onChange={setActiveCategory} />
+      <DzikirCategoryTabs
+        activeCategory={activeCategory}
+        onChange={handleCategoryChange}
+      />
 
       {activeCategory === "harian" ? (
         <>

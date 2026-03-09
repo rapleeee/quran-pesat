@@ -1,3 +1,4 @@
+import { FeatureStatusBadge } from "@/components/feature-status-badge";
 import { router } from "expo-router";
 import {
   Bell,
@@ -248,6 +249,7 @@ export default function Settings() {
             <Text className="text-gray-400 dark:text-[#94a3b8] text-sm">
               Sync bookmark & progress
             </Text>
+            <FeatureStatusBadge status="develop" />
           </View>
           <View className="bg-[#728d8d] px-3 py-2 rounded-lg flex-row items-center">
             <LogIn size={14} color="#fff" />

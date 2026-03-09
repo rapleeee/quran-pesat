@@ -1,3 +1,8 @@
+import { FeatureStatusBadge } from "@/components/feature-status-badge";
+import {
+  getFeatureStatusByRoute,
+  getFeatureWarningByRoute,
+} from "@/data/feature-status";
 import { menuItems } from "@/data/menu-beranda";
 import { searchCatalog } from "@/data/search-catalog";
 import { useAllSurah } from "@/hooks/quran/use-quran";
@@ -6,6 +11,7 @@ import { ArrowLeft, Search, Sparkles } from "lucide-react-native";
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Text,
   TextInput,
@@ -151,9 +157,21 @@ function compareRankedItems(a: RankedSearchItem, b: RankedSearchItem): number {
 }
 
 function SearchRow({ item }: { item: SearchItem }) {
+  const status = getFeatureStatusByRoute(item.route);
+
+  const handlePress = () => {
+    const warning = getFeatureWarningByRoute(item.route);
+    if (warning) {
+      Alert.alert(warning.title, warning.message);
+      return;
+    }
+
+    router.push(item.route as never);
+  };
+
   return (
     <TouchableOpacity
-      onPress={() => router.push(item.route as never)}
+      onPress={handlePress}
       className="px-4 py-3 bg-white dark:bg-[#111827] border-b border-[#f0f0f0] dark:border-[#1f2937]"
     >
       <View className="flex-row items-center">
@@ -167,6 +185,7 @@ function SearchRow({ item }: { item: SearchItem }) {
         <View className="flex-1">
           <Text className="text-[#363636] dark:text-[#f8fafc] font-semibold">{item.title}</Text>
           <Text className="text-gray-500 dark:text-[#cbd5e1] text-xs">{item.subtitle}</Text>
+          {status !== "active" ? <FeatureStatusBadge status={status} /> : null}
         </View>
       </View>
     </TouchableOpacity>
