@@ -2,8 +2,8 @@ import { Surah, SurahDetail } from "@/types/quran";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-const BASE_URL = "https://quran-api.santrikoding.com/api";
-const CACHE_VERSION = 1;
+const BASE_URL = "https://equran.id/api/v2";
+const CACHE_VERSION = 2;
 const SURAH_LIST_CACHE_KEY = "quran_surah_list_v1";
 const SURAH_DETAIL_CACHE_PREFIX = "quran_surah_detail_v1_";
 
@@ -50,11 +50,21 @@ export function useAllSurah() {
           setLoading(false);
         }
 
-        const response = await fetch(`${BASE_URL}/surah`);
+        const response = await fetch(`${BASE_URL}/surat`);
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
-        const data = await response.json();
+        const json = await response.json();
+        const data: Surah[] = json.data.map((item: any) => ({
+          nomor: item.nomor,
+          nama: item.nama,
+          nama_latin: item.namaLatin,
+          jumlah_ayat: item.jumlahAyat,
+          tempat_turun: item.tempatTurun,
+          arti: item.arti,
+          deskripsi: item.deskripsi,
+          audio: item.audioFull["05"],
+        }));
         await AsyncStorage.setItem(
           SURAH_LIST_CACHE_KEY,
           JSON.stringify({ version: CACHE_VERSION, data }),
@@ -118,11 +128,30 @@ export function useSurahDetail(nomor: number) {
           setLoading(false);
         }
 
-        const response = await fetch(`${BASE_URL}/surah/${nomor}`);
+        const response = await fetch(`${BASE_URL}/surat/${nomor}`);
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
-        const data = await response.json();
+        const json = await response.json();
+        const item = json.data;
+        const data: SurahDetail = {
+          nomor: item.nomor,
+          nama: item.nama,
+          nama_latin: item.namaLatin,
+          jumlah_ayat: item.jumlahAyat,
+          tempat_turun: item.tempatTurun,
+          arti: item.arti,
+          deskripsi: item.deskripsi,
+          audio: item.audioFull["05"],
+          ayat: item.ayat.map((a: any) => ({
+            id: a.nomorAyat,
+            surah: item.nomor,
+            nomor: a.nomorAyat,
+            ar: a.teksArab,
+            tr: a.teksLatin,
+            idn: a.teksIndonesia,
+          })),
+        };
         await AsyncStorage.setItem(
           cacheKey,
           JSON.stringify({ version: CACHE_VERSION, data }),

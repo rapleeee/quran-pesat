@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "islam pesat",
+    "name": "",
     "slug": "quran-pesat",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -40,7 +40,9 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
