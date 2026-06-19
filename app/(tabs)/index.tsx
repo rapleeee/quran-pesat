@@ -106,7 +106,7 @@ export default function Index() {
           <View className="p-4 flex-row justify-between items-center">
             <View>
               <Text className="text-white font-medium text-lg">
-                {tanggalHijriyah} H
+                {tanggalHijriyah}
               </Text>
               {loadingLocation ? (
                 <LocationSkeleton />
@@ -155,7 +155,7 @@ export default function Index() {
           <MenuBeranda />
           <RamadhanBanner key={bannerVersion} />
           <CardPrayer />
-          <View className="mt-8 mb-24">
+          <View className="mt-8 mb-12">
             <Text className="px-4 font-light text-xs text-center text-[#336363] dark:text-[#9fb7b7] mb-6">
               Semua operasional aplikasi ini di develop dengan individu {"\n"}
               bukan kelompok atau organisasi masyarakat

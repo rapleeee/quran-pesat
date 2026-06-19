@@ -1,6 +1,13 @@
 import { Heart, Plus, Share2 } from "lucide-react-native";
 import React from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface PrayerItem {
   id: string;
@@ -59,8 +66,12 @@ function PrayerCard({ item }: { item: PrayerItem }) {
           className="w-10 h-10 rounded-full"
         />
         <View className="ml-3 flex-1">
-          <Text className="font-semibold text-[#363636] dark:text-[#f8fafc]">{item.name}</Text>
-          <Text className="text-xs text-gray-400 dark:text-[#94a3b8]">{item.time}</Text>
+          <Text className="font-semibold text-[#363636] dark:text-[#f8fafc]">
+            {item.name}
+          </Text>
+          <Text className="text-xs text-gray-400 dark:text-[#94a3b8]">
+            {item.time}
+          </Text>
         </View>
       </View>
       <View className="p-4">
@@ -75,7 +86,9 @@ function PrayerCard({ item }: { item: PrayerItem }) {
         <TouchableOpacity className="flex-row items-center gap-2">
           <Heart size={20} color="#728d8d" />
           <Text className="text-[#728d8d] font-medium">Aamiin</Text>
-          <Text className="text-gray-400 dark:text-[#94a3b8] text-sm">({item.aamiin})</Text>
+          <Text className="text-gray-400 dark:text-[#94a3b8] text-sm">
+            ({item.aamiin})
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-row items-center gap-2">
           <Share2 size={18} color="#728d8d" />
@@ -92,7 +105,15 @@ export default function CardPrayer() {
         <Text className="font-bold text-lg text-[#363636] dark:text-[#f8fafc]">
           Aminkan doa saudaramu
         </Text>
-        <TouchableOpacity className="flex-row items-center gap-1">
+        <TouchableOpacity
+          className="flex-row items-center gap-1"
+          onPress={() =>
+            Alert.alert(
+              "Under Development",
+              "Fitur ini masih dalam pengembangan.",
+            )
+          }
+        >
           <Text className="font-medium text-[#728d8d]">Buat doa</Text>
           <Plus size={18} color="#728d8d" />
         </TouchableOpacity>
